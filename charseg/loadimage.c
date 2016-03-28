@@ -1,8 +1,5 @@
-# include <stdio.h>
-# include <stdlib.h>
-# include <SDL/SDL.h>
-# include <SDL/SDL_image.h>
-# include <err.h>
+# include "loadimage.h"
+
 void wait_for_keypressed(void) {
   SDL_Event             event;
   // Infinite loop, waiting for event

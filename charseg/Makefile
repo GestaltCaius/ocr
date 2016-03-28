@@ -7,13 +7,14 @@ CFLAGS= -Wall -Wextra -std=c99 -O3
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
 
-SRC= ${wildcard src/*.c}
+SRC= ${wildcard *.c}
 OBJ= ${SRC:.c=.o}
  
 all: main
  
 main: ${OBJ}
- 
+	$(CC) -o $@ $^ $(LDFLAGS)
+	
 clean:
 	rm -f *~ *.o
 	rm -f main

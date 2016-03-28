@@ -1,5 +1,6 @@
-# include <stdio.h>
-# include <stdlib.h>
+# include "pixel_operations.h"
+# include "filters.h"
+# include "loadimage.h"
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
 
