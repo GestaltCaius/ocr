@@ -86,7 +86,7 @@ struct try* init_try_xor()
     struct try *trys = calloc(4,sizeof(struct try));
     
     double input[4][2] = { {0,0} , {0,1} , {1,0} , {1,1} };
-    double output[4] = {   1 ,     1 ,     1 ,     0     };
+    double output[4] = {   0 ,     1 ,     1 ,     0     };
 
     for(int i = 0; i < 4; i++)
     {
@@ -185,7 +185,6 @@ void backpropa(struct network *n, double eta, struct try in)
             else
             {
                 // w_k -= eta * sum( lder_(i+1)(j) * w_(i+1)(j) ) * sig'((out_(i-1)[] . w_i[]) + b_i) * out_(i - 1)(k)
-                double val;
                 (*n).n[i][j].lder = 0;
                 
                 for(size_t l = 0; l < (*n).L[i + 1]; l++)
@@ -200,7 +199,7 @@ void backpropa(struct network *n, double eta, struct try in)
                     //val *= (*n).n[i-1][k].lout;
                     (*n).n[i][j].w[k] -= eta * (*n).n[i][j].lder * (*n).n[i-1][k].lout;
                 }
-                
+               (*n).n[i][j].b -= eta * (*n).n[i][j].lder; 
                // printf("\n der2: %f\n", val);
                 
             }
@@ -259,7 +258,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
                     printf(" %f |",dif_error(result[k],tr[j].res[k]));
             printf("\n");
             }
-            backpropa(net,0.01,tr[j]);
+            backpropa(net,0.001,tr[j]);
         }
 
         if(display > 0 && i % display == 0)
@@ -270,8 +269,8 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
 
 int main(){
 
-size_t L[] = {2 , 1};
-struct network net = init_network(L,2);
+size_t L[] = {2, 2 , 1};
+struct network net = init_network(L,3);
 struct try *tr = init_try_xor();
 
 train(&net, tr, 4, 1000000, 100000);
