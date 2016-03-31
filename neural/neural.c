@@ -4,10 +4,10 @@
 # include <math.h>
 
 struct neuron{
-    double *w; // tableau de nw poids
+    double *w; // tableau de poids
     size_t nw; // nbs de poids
     double b; // bias
-    double lder; // dernière valeur de la fonction sigmoid
+    double lder; // dernière valeur des dériver (error_der * sig_der)
     double lout; // dernière sortie
 };
 
@@ -18,8 +18,8 @@ struct network{
 };
 
 struct try{
-    double *in;
-    double *res;
+    double *in; //essai entrée
+    double *res; // essai resultat attendu
 };
 
 // inits fonctions
@@ -101,6 +101,7 @@ struct try* init_try_xor()
     return trys;
 }
 
+
 double* get_out(struct network net)
 {
     double *out = calloc(net.L[net.nL - 1], sizeof(double));
@@ -152,7 +153,8 @@ void feedforward(struct network *n, double *in)
                 (*n).n[i][j].lout = in[j];
             }
             else
-            {
+            {   
+                // zf = x[] . w[] + b
                 zj = dot_product((*n).n[i - 1],(*n).n[i][j].w,(*n).L[i - 1]) + (*n).n[i][j].b;
                 (*n).n[i][j].lout = sigmoid(zj);
             }
@@ -182,7 +184,7 @@ void backpropa(struct network *n, double eta, struct try in)
              //   printf("\n der1: %f\n",der); 
                 (*n).n[i][j].b -= eta * (*n).n[i][j].lder;
             }
-            else
+            else //hiden layer
             {
                 // w_k -= eta * sum( lder_(i+1)(j) * w_(i+1)(j) ) * sig'((out_(i-1)[] . w_i[]) + b_i) * out_(i - 1)(k)
                 (*n).n[i][j].lder = 0;
@@ -194,13 +196,9 @@ void backpropa(struct network *n, double eta, struct try in)
                 (*n).n[i][j].lder *= psigmoid(dot_product((*n).n[i-1],(*n).n[i][j].w,(*n).L[i-1]) + (*n).n[i][j].b);
                 for(size_t k = 0; k < (*n).L[i - 1]; k++)
                 {
-                   // printf("do");
-                    //val *= psigmoid(dot_product((*n).n[i-1],(*n).n[i][j].w,(*n).L[i-1]) + (*n).n[i][j].b);
-                    //val *= (*n).n[i-1][k].lout;
                     (*n).n[i][j].w[k] -= eta * (*n).n[i][j].lder * (*n).n[i-1][k].lout;
                 }
                (*n).n[i][j].b -= eta * (*n).n[i][j].lder; 
-               // printf("\n der2: %f\n", val);
                 
             }
         }
@@ -258,7 +256,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
                     printf(" %f |",dif_error(result[k],tr[j].res[k]));
             printf("\n");
             }
-            backpropa(net,0.001,tr[j]);
+            backpropa(net,0.01,tr[j]);
         }
 
         if(display > 0 && i % display == 0)
@@ -269,7 +267,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
 
 int main(){
 
-size_t L[] = {2, 2 , 1};
+size_t L[] = {2, 3 , 1};
 struct network net = init_network(L,3);
 struct try *tr = init_try_xor();
 
