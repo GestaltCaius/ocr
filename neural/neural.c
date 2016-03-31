@@ -27,7 +27,7 @@ struct neuron init_neuron(size_t nw, int ent)
 {
     struct neuron new;
     new.nw = nw;
-    new.w = calloc(nw,sizeof(struct neuron));
+    new.w = calloc(nw,sizeof(size_t));
 
     // set random weight;
     if(ent)
@@ -53,6 +53,18 @@ struct neuron init_neuron(size_t nw, int ent)
     new.lout = 0;
 
     return new;
+}
+
+
+void free_network_neurons(struct network* net)
+{
+    for(int i = 0; i < net->nL; i++)
+    {
+        for(size_t j = 0; j < net->L[i]; j++)
+            free(net->n[i][j].w);
+        free(net->n[i]);
+    }
+    free(net->n);
 }
 
 struct network init_network(size_t *L, size_t nL)
@@ -101,6 +113,15 @@ struct try* init_try_xor()
     return trys;
 }
 
+void free_trys(struct try* tries, size_t number)
+{
+    for(size_t i = 0; i < number; i++)
+    {
+        free(tries[i].in);
+        free(tries[i].res);
+    }
+    free(tries);
+}
 
 double* get_out(struct network net)
 {
@@ -255,6 +276,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
                 for(size_t k = 0; k < (*net).L[(*net).nL - 1]; k++)
                     printf(" %f |",dif_error(result[k],tr[j].res[k]));
             printf("\n");
+                free(result);
             }
             backpropa(net,0.01,tr[j]);
         }
@@ -264,6 +286,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
 
     }
 }
+
 
 int main(){
 
@@ -275,6 +298,9 @@ train(&net, tr, 4, 1000000, 100000);
 
 printf("end");
 fflush(stdout);
+
+free_trys(tr, 4);
+free_network_neurons(&net);
 
 return 0;
 
