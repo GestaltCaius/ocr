@@ -59,7 +59,7 @@ struct neuron init_neuron(size_t nw, int ent)
 
 void free_network_neurons(struct network* net)
 {
-    for(int i = 0; i < net->nL; i++)
+    for(size_t i = 0; i < net->nL; i++)
     {
         for(size_t j = 0; j < net->L[i]; j++)
             free(net->n[i][j].w);
@@ -293,11 +293,11 @@ int main(){
 
 srand(time(NULL));
 
-size_t L[] = {2, 2 , 1};
+size_t L[] = {2, 3 , 1};
 struct network net = init_network(L,3);
 struct try *tr = init_try_xor();
 
-train(&net, tr, 4, 1000000, 100000);
+train(&net, tr, 4, 100000, 10000);
 
 printf("end");
 fflush(stdout);
