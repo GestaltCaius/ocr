@@ -114,6 +114,27 @@ struct try* init_try_xor()
     return trys;
 }
 
+struct try* init_try_3_2()
+{
+    struct try *trys = calloc(8,sizeof(struct try));
+    double input[8][3] = { {0,0,0} , {0,0,1} , {0,1,0} , {0,1,1} , {1,0,0} , {1,0,1} , {1,1,0} , {1,1,1} };
+    double output[9][2] = { {0,0}  , {0,1}   , {1,0}   , {1,1}   , {1,1}   , {1,0}   , {0,1}   , {0,0} };
+    
+    for(int i = 0; i < 8; i++)
+    {
+        (trys[i]).in = calloc(3,sizeof(double));
+        (trys[i]).in[0] = input[i][0];
+        (trys[i]).in[1] = input[i][1];
+        (trys[i]).in[2] = input[i][2];
+
+        (trys[i]).res = calloc(2,sizeof(double));
+        (trys[i]).res[0] = output[i][0];
+        (trys[i]).res[1] = output[i][1];
+    }
+    return trys;
+
+}
+
 void free_trys(struct try* tries, size_t number)
 {
     for(size_t i = 0; i < number; i++)
@@ -293,9 +314,12 @@ int main(){
 
 srand(time(NULL));
 
-size_t L[] = {2, 3 , 1};
+size_t L[] = {2, 4 , 1};
 struct network net = init_network(L,3);
 struct try *tr = init_try_xor();
+
+// try 3 in 2 out, 8 exemples
+//struct try *tr = init_try_3_2();
 
 train(&net, tr, 4, 100000, 10000);
 
