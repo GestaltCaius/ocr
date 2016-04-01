@@ -2,6 +2,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
+#include <time.h>
 
 struct neuron{
     double *w; // tableau de poids
@@ -290,7 +291,9 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
 
 int main(){
 
-size_t L[] = {2, 3 , 1};
+srand(time(NULL));
+
+size_t L[] = {2, 2 , 1};
 struct network net = init_network(L,3);
 struct try *tr = init_try_xor();
 
