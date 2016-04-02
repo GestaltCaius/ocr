@@ -33,3 +33,9 @@
 
 # Vim files
 *.swp
+
+#Dependency files
+*.d
+
+#tag files
+*/tags
