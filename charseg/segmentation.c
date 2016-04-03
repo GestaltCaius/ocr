@@ -3,7 +3,61 @@
 
 # include "pixel_operations.h"
 
- /* 
+// BASIC FUNCTIONS
+
+struct list_coords list_empty(void)
+{
+	struct list_coords *l = malloc(sizeof(struct list_coords));
+	l -> next = NULL;
+	return l;
+}
+
+void list_push_front(struct list_coords *list, struct list_coords *cell)
+{
+	struct list_coords *elm = malloc(sizeof(stuct list_coords));
+	elm =  cell;
+	if (list_is_empty(list))
+	{
+		list -> next = elm;
+	}
+	else
+	{
+		elm -> next = list -> next -> next;
+		list -> next = elm;
+	}
+}
+
+struct list_coords* list_pop_front(struct list_coords *list)
+{
+	if (!list_is_empty(list))
+	{
+		struct list_coords *cell = malloc(sizeof(struct list_coords));
+		struct list_coords *tmp = list -> next;
+		cell = list -> next;
+		list -> next = list -> next -> next;
+		free(tmp);
+		return cell;
+	}
+	else
+		return NULL;
+}
+
+void print_coords(struct list_coords *list)
+{
+	while (list -> next != NULL)
+	{
+		prinf("(%d,%d) ", list -> next -> w, list -> next -> h);
+		struct list_coords *tmp = list;
+		list = list -> next;
+		free(tmp);
+	}
+	printf("|"); // end of the list
+}
+
+// CHARACTER SEGMENTATION
+
+
+/* 
   Sends back the heights of the beginning (pos_1) and of the end (pos_2) of each line in the given image, 
   which corresponds to the first line with pixels belonging to yet unidentified characters, and the last  
   pixel line before the end of those characters. 
