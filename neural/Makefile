@@ -1,8 +1,9 @@
 # Makefile
 
 CC=clang -fsanitize=address
-CPPFLAGS= -MMD -MP
+CPPFLAGS= -MMD -MP `pkg-config --cflags sdl`
 CFLAGS= -Wall -Wextra -pedantic -std=c99 -O2
+LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
 
 SRC= pixel_operations.c loadimage.c neural.c

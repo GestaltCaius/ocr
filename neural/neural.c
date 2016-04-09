@@ -2,7 +2,12 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <math.h>
-#include <time.h>
+# include <string.h>
+# include <time.h>
+# include <SDL.h>
+# include "pixel_operations.h"
+# include "loadimage.h"
+
 
 struct neuron{
     double *w; // tableau de poids
@@ -135,13 +140,50 @@ struct try* init_try_3_2()
 
 }
 
+
+
 struct try* init_numbers_0_to_9(char *path)
 {
     struct try *trys = calloc(10,sizeof(struct try));
-    
+    init_sdl();
     for(int i = 0; i < 10; i++)
     {
+        //create path to file
+        char str[80];
+        strcpy(str, path);
+        char i_char[80];
+        sprintf(i_char, "%d", i);
+        strcat(str, i_char);
+        strcat(str, ".png");
+        //printf(str);
+        //printf("\n");
+        
+        //load image
+        SDL_Surface *img = load_image(str);
+        trys[i].in = calloc(img->w*img->h,sizeof(double));
+        
+        //fill array
+        printf("%d ",img->w*img->h);
+        for(int j = 0; j < img->w; j++)
+        {
+            for(int k = 0; k < img->h; k++)
+            {
+                Uint32 pixel = getpixel(img,j,k);
+                Uint8 r = 0, g = 0, b = 0;
+                SDL_GetRGB(pixel,img->format, &r, &g, &b);
+                Uint8 res = r = r * 0.3 + g*0.59 + b * 0.11;
+                if(res < 127)
+                    trys[i].in[j*(img->w)+k] = 1;
+                else
+                    trys[i].in[j*(img->w)+k] = 0;
 
+                printf("%d ",(int)(trys[i].in[j*(img->w)+k]));
+            }
+            printf("\n");
+        }
+        (trys[i]).res = calloc(10,sizeof(double));
+        (trys[i]).res[i] = 1;
+                
     }   
     return trys;
 }
@@ -285,6 +327,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
         shuffle_ex(tr,nbval);
         if(display > 0 && i % display == 0)
             printf("%zu:\n",i);
+        double total_tryS = 0;
         for(size_t j = 0; j < nbval; j++)
         {
             feedforward(net, tr[j].in);
@@ -295,7 +338,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
                 printf("\n\tIN:\n\t|");
                 fflush(stdout);
                 for(size_t k = 0; k < (*net).L[0]; k++)
-                    printf(" %f |",tr[j].in[k]);
+                    printf(" %d |",(int)tr[j].in[k]);
 
                 printf("\n\tOUT:\n\t|");
                 for(size_t k = 0; k < (*net).L[(*net).nL - 1]; k++)
@@ -306,17 +349,32 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
                     printf(" %f |",tr[j].res[k]);
            
                 printf("\n\tERROR:\n\t|");
+                    double total_try = 0;
                 for(size_t k = 0; k < (*net).L[(*net).nL - 1]; k++)
-                    printf(" %f |",dif_error(result[k],tr[j].res[k]));
+                {
+                    double dif = dif_error(result[k],tr[j].res[k]);
+                    printf(" %f |",dif);
+                    total_try += dif;
+                    
+                }
+                total_try = total_try / (*net).L[(*net).nL - 1];
+                printf("\n\tTOTAL ERROR: %f\n",total_try);
+                total_tryS += total_try;
             printf("\n");
                 free(result);
+            
+
             }
-            backpropa(net,0.01,tr[j]);
+            backpropa(net,0.1,tr[j]);
         }
 
         if(display > 0 && i % display == 0)
+        {
+            total_tryS = total_tryS / nbval;
+            printf("\nTOTAL ERROR TRYS (%zu): %f\n", i, total_tryS);
+    
             printf("\n\n");
-
+        }
     }
 }
 
@@ -325,19 +383,22 @@ int main(){
 
 srand(time(NULL));
 
-size_t L[] = {2, 4 , 1};
+size_t L[] = {17*12, 50, 10};
 struct network net = init_network(L,3);
-struct try *tr = init_try_xor();
+//struct try *tr = init_try_xor();
 
 // try 3 in 2 out, 8 exemples
 //struct try *tr = init_try_3_2();
 
-train(&net, tr, 4, 100000, 10000);
+struct try *tr = init_numbers_0_to_9("./nbs/");
+
+
+train(&net, tr, 10, 10000000, 1000);
 
 printf("end");
 fflush(stdout);
 
-free_trys(tr, 4);
+free_trys(tr, 10);
 free_network_neurons(&net);
 
 return 0;
