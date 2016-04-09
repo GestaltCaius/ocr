@@ -146,12 +146,11 @@ struct try* init_numbers_0_to_9(char *path)
 {
     struct try *trys = calloc(10,sizeof(struct try));
     init_sdl();
+    char str[80], i_char[80];
     for(int i = 0; i < 10; i++)
     {
         //create path to file
-        char str[80];
         strcpy(str, path);
-        char i_char[80];
         sprintf(i_char, "%d", i);
         strcat(str, i_char);
         strcat(str, ".png");
@@ -183,8 +182,8 @@ struct try* init_numbers_0_to_9(char *path)
         }
         (trys[i]).res = calloc(10,sizeof(double));
         (trys[i]).res[i] = 1;
-                
-    }   
+        free(img);
+    }
     return trys;
 }
 
@@ -402,7 +401,7 @@ if(argv[1][0] == '1') //xor
 
 if(argv[1][0] == '2') // 3 input 2 out ex
 {
-    size_t L[] = {3, 3, 2};
+    size_t L[] = {3, 4, 2};
     struct network net = init_network(L,3);
     struct try *tr = init_try_3_2();
     train(&net, tr, 8, 10000, 1000);
@@ -416,7 +415,7 @@ if(argv[1][0] == '3')
     size_t L[] = {17*12, 50, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 100000, 10000);
+    train(&net, tr, 10, 10000, 1000);
     free_trys(tr, 10);
     free_network_neurons(&net);
     return 0;

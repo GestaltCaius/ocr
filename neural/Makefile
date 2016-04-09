@@ -1,10 +1,11 @@
 # Makefile
 
-CC=clang -fsanitize=address
+#CC=clang -fsanitize=address
+CC=gcc -fsanitize=address
 CPPFLAGS= -MMD -MP `pkg-config --cflags sdl`
 CFLAGS= -Wall -Wextra -pedantic -std=c99 -O2
 LDFLAGS=
-LDLIBS= `pkg-config --libs sdl` -lSDL_image
+LDLIBS= `pkg-config --libs sdl` -lSDL_image -lm
 
 SRC= pixel_operations.c loadimage.c neural.c
 OBJ= ${SRC:.c=.o}
