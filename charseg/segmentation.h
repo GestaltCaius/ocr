@@ -13,6 +13,25 @@ struct list_coords { // List of pairs of coordinates
 	struct list_coords *next;
 };
 
+// BASIC FUNCTIONS
+
+static inline 
+int list_is_empty(struct list_coords list) {return l -> next == NULL; }
+
+struct list_coords* list_empty(void);
+
+void print_coords(struct list_coords);
+
+void list_coords* list_push_front(struct list_coords *list struct list_coords *cell);
+
+struct list_coords* list_pop_front(struct list_coords *list);
+
+// CHARACTERS SEGMENTATION
+
+
+
+
+
 /*
 	Sends back the heights of the beginning (pos_1) and of the end (pos_2) of each line in the given image,
 	which corresponds to the first line with pixels belonging to yet unidentified characters, and the last 

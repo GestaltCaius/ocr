@@ -1,6 +1,7 @@
 # include "pixel_operations.h"
 # include "filters.h"
 # include "loadimage.h"
+# include "segmentation.h"
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
 
@@ -15,7 +16,10 @@ int main(int argc, char *argv[])
         display_image(img);
         filter_blackwhite(img);
         display_image(img);
-        SDL_FreeSurface(img);
+				struct list_coords output = segmentation_final_output(img, lines_to_characters(segmentation_to_lines(img));
+				print_coords(output);
+				free(output);
+				SDL_FreeSurface(img);
         SDL_Quit();
     }
     else
