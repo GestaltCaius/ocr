@@ -135,6 +135,17 @@ struct try* init_try_3_2()
 
 }
 
+struct try* init_numbers_0_to_9(char[] path)
+{
+    struct try *trys = calloc(10,sizeof(struct try));
+    
+    for(int i = 0; i < 10; i++)
+    {
+
+    }   
+    return trys;
+}
+
 void free_trys(struct try* tries, size_t number)
 {
     for(size_t i = 0; i < number; i++)
