@@ -123,7 +123,7 @@ struct try* init_try_3_2()
 {
     struct try *trys = calloc(8,sizeof(struct try));
     double input[8][3] = { {0,0,0} , {0,0,1} , {0,1,0} , {0,1,1} , {1,0,0} , {1,0,1} , {1,1,0} , {1,1,1} };
-    double output[9][2] = { {0,0}  , {0,1}   , {1,0}   , {1,1}   , {1,1}   , {1,0}   , {0,1}   , {0,0} };
+    double output[8][2] = { {0,0}  , {0,1}   , {1,0}   , {1,1}   , {1,1}   , {1,0}   , {0,1}   , {0,0} };
     
     for(int i = 0; i < 8; i++)
     {
@@ -379,27 +379,52 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_
 }
 
 
-int main(){
+int main(int argc, char *argv[]){
+
+if(argc != 2)
+{
+    printf("error args");
+    return 0;
+}
 
 srand(time(NULL));
 
-size_t L[] = {17*12, 50, 10};
-struct network net = init_network(L,3);
-//struct try *tr = init_try_xor();
+if(argv[1][0] == '1') //xor
+{
+    size_t L[] = {2, 3, 1};
+    struct network net = init_network(L,3);
+    struct try *tr = init_try_xor();
+    train(&net, tr, 4, 10000, 1000);
+    free_trys(tr, 4);
+    free_network_neurons(&net);
+    return 0;
+}
 
-// try 3 in 2 out, 8 exemples
-//struct try *tr = init_try_3_2();
+if(argv[1][0] == '2') // 3 input 2 out ex
+{
+    size_t L[] = {3, 3, 2};
+    struct network net = init_network(L,3);
+    struct try *tr = init_try_3_2();
+    train(&net, tr, 8, 10000, 1000);
+    free_trys(tr, 8);
+    free_network_neurons(&net);
+    return 0;
+}
 
-struct try *tr = init_numbers_0_to_9("./nbs/");
-
-
-train(&net, tr, 10, 10000000, 1000);
-
+if(argv[1][0] == '3')
+{
+    size_t L[] = {17*12, 50, 10};
+    struct network net = init_network(L,3);
+    struct try *tr = init_numbers_0_to_9("./nbs/");
+    train(&net, tr, 10, 100000, 10000);
+    free_trys(tr, 10);
+    free_network_neurons(&net);
+    return 0;
+}
+printf("error args");
 printf("end");
 fflush(stdout);
 
-free_trys(tr, 10);
-free_network_neurons(&net);
 
 return 0;
 
