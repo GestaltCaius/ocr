@@ -412,10 +412,10 @@ if(argv[1][0] == '2') // 3 input 2 out ex
 
 if(argv[1][0] == '3')
 {
-    size_t L[] = {17*12, 50, 10};
+    size_t L[] = {17*12, 10, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 10000, 1000);
+    train(&net, tr, 10, 100000, 10000);
     free_trys(tr, 10);
     free_network_neurons(&net);
     return 0;
