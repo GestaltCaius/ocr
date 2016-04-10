@@ -1,10 +1,13 @@
 # include <stdlib.h>
 # include <stdio.h>
+# include <SDL/SDL.h>
+# include <SDL/SDL_image.h>
 
 # include "pixel_operations.h"
 
 // BASIC FUNCTIONS
 
+/*
 struct list_coords list_empty(void)
 {
 	struct list_coords *l = malloc(sizeof(struct list_coords));
@@ -52,9 +55,27 @@ void print_coords(struct list_coords *list)
 		free(tmp);
 	}
 	printf("|"); // end of the list
-}
+}*/
 
 // CHARACTER SEGMENTATION
+
+// img to matrix of 0's and 1's
+double *img_to_matrix(SDL_Surface *img)
+{
+    Uint32 pxl;
+    Uint8 r;
+    double *A = malloc(sizeof(double) * (img->w * img->h));
+    for (int w = 0; w < img->w; w++)
+    {
+        for (int h = 0; h < img->h; h++)
+        {
+            pxl = getpixel(img, w, h);
+            SDL_GetRGB(pxl, img->format, &r, &r, &r);
+            A[w * img->w + h] = r == 255 ? 1 : 0;
+        }
+    }
+    return A;
+}
 
 
 /* 
@@ -86,14 +107,14 @@ void print_coords(struct list_coords *list)
         for example, if a pixel is part of a "stain" composed by 14 pixels, and if the minimal number of pixels in 
         a potential character is fixed to 10, then the pixel on which we are is eligible to be part of a character and 
         of a characters line ; if we have enough (to determine) pixels like the previous one, then we're on a line. 
-*/ 
  
-struct list_coords* segmentation_to_lines (SDL_SURFACE *img) // Only the h value of the struct coords matters in that one. 
+struct coords *segmentation_to_lines(SDL_SURFACE *img) // Only the h value of the struct coords matters in that one. 
 {
-
+    // We assume that all the paragraphs begin at the same width.
+    // bxw filter already applied to img
+    return NULL;
 }
  
-/*  
   Gives back the list of the coordinates of the corners on the top left and bottom right corners of a square containing a 
   character, for each character a given line.
 	
@@ -109,23 +130,20 @@ struct list_coords* segmentation_to_lines (SDL_SURFACE *img) // Only the h value
 	- we link it to the struct list_coords contaning the coordinates of the next square by repeating the same method.
 	- when we've reached the last column of the image, we link the struct list_coords containing the coordinates  of the last
 	  character to NULL (coord_char_n -> next = NULL).
-*/ 
  
-struct list_coords* line_to characters(SDL_SURFACE *img, struct list_coords *line)
+struct list_coords *line_to characters(SDL_SURFACE *img, struct list_coords *line)
 {
-
+    return NULL;
 }
  
-/* 
   DEPENDING ON YOUNES AND THEO'S EXPECTATIONS. 
  
   Uses segmentation_to_lines and list_coords to create an ordonate struct list_coords ; the characters are put in it in the same 
   order than they are on the picture, and marks the end of a line by putting a struct list coords with pos_1 and pos_2 fixed on 
   (-1,-1) after the coordinates of the last character of the line. 
-*/ 
  
 struct list_coords* segmentation_final_output(SDL_SURFACE *img, struct list_coords *lines)
 {
-
-}
+    return NULL;
+}*/
 

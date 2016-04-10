@@ -4,7 +4,9 @@
 # include <SDL/SDL_image.h>
 # include "pixel_operations.h"
 
-struct coords { // coordinates of a pixel in the image (similar to a Tuple<int, int> in c#)
+/*
+ *
+ * struct coords { // coordinates of a pixel in the image (similar to a Tuple<int, int> in c#)
 	int h, w
 };
 
@@ -32,7 +34,6 @@ struct list_coords* list_pop_front(struct list_coords *list);
 
 
 
-/*
 	Sends back the heights of the beginning (pos_1) and of the end (pos_2) of each line in the given image,
 	which corresponds to the first line with pixels belonging to yet unidentified characters, and the last 
 	pixel line before the end of those characters.
@@ -61,23 +62,21 @@ struct list_coords* list_pop_front(struct list_coords *list);
 			  for example, if a pixel is part of a "stain" composed by 14 pixels, and if the minimal number of pixels in
 				a potential character is fixed to 10, then the pixel on which we are is eligible to be part of a character and
 				of a characters line ; if we have enough (to determine) pixels like the previous one, then we're on a line.
-*/
 
 struct list_coords* segmentation_to_lines (SDL_SURFACE *img); // Only the h value of the struct coords matters in that one. 
 
-/* 
 	Gives back the list of the coordinates of the corners on the top left and bottom right corners of a square containing a
 	character, for each character a given line.
-*/
 
 struct list_coords* line_to characters(SDL_SURFACE *img, struct list_coords *line);
 
-/*
 	DEPENDING ON YOUNES AND THEO'S EXPECTATIONS.
 
 	Uses segmentation_to_lines and list_coords to create an ordonate struct list_coords ; the characters are put in it in the same
 	order than they are on the picture, and marks the end of a line by putting a struct list coords with pos_1 and pos_2 fixed on
 	(-1,-1) after the coordinates of the last character of the line.
+
+struct list_coords* segmentation_final_output(SDL_SURFACE *img, struct list_coords *lines);
+
 */
 
-struct list_coords* segmentation_final_output(SDL_SURFACE *img, struct list_coords *lines); 
