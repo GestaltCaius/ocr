@@ -29,16 +29,12 @@ struct matrix* img_to_matrix(SDL_Surface *img)
             pxl = getpixel(img, w, h);
             SDL_GetRGB(pxl, img->format, &r, &r, &r);
             A->data[h * img->w + w] = r == 255 ? 0 : 1;
-	    printf("%d ", (int)(A->data[h * img->w + w]));
+//	    printf("%d ", (int)(A->data[h * img->w + w]));
         }
-	printf("\n");
+//	printf("\n");
     }
-    printf("END");
-    fflush(stdout);
     return A;
 }
-
-// TESTING
 
 void draw_square(SDL_Surface *img, struct coords square)
 {
@@ -70,10 +66,7 @@ int line_is_empty(struct matrix *img, int line)
 {   
     int i = 0;
     for(; i < img -> width && img -> data[line * img->width+ i] == 0; i++){ }
-    if (i == img -> width)
-        return 1;
-    else
-        return 0;
+    return(i == img -> width);
 }
 
 int column_is_empty(struct matrix *img, int x, int y1, int y2)
