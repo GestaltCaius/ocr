@@ -56,7 +56,7 @@ void putpixel(SDL_Surface *surface, unsigned x, unsigned y, Uint32 pixel) {
   }
 }
 
-static inline SDL_Surface* CopySurface(SDL_Surface* src)
+SDL_Surface* CopySurface(SDL_Surface* src)
 {
     return SDL_ConvertSurface(src, src->format, SDL_SWSURFACE);
 }
