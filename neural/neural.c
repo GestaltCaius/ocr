@@ -9,6 +9,7 @@
 # include "loadimage.h"
 
 #include "neural.h"
+#include "weight_file.h"
 
 struct try{
     double *in; //essai entrée
@@ -382,6 +383,7 @@ if(argv[1][0] == '1') //xor
     struct try *tr = init_try_xor();
     train(&net, tr, 4, 20000, 1000);
     free_trys(tr, 4);
+    save_network_to_file(&net, "xor_weights.txt");
     free_network_neurons(&net);
     return 0;
 }
