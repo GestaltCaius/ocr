@@ -16,4 +16,6 @@ double* resize_table(struct coords c, double table[], int x, int y)
             new_t[i*x+j] = table[(int)(i*modi*ox+j*modj)];
         }
     }
+
+    return new_t;
 }
