@@ -96,6 +96,8 @@ int vector_extract_at(struct vector *vect, size_t pos, struct coords *x)
     }
 }
 
+
+
 struct vector* vector_clone(struct vector *vect)
 {
     struct vector *newvect = vector_make(vect->capacity);
@@ -118,3 +120,54 @@ struct vector* vector_clone(struct vector *vect)
 }*/
 
 
+<<<<<<< HEAD
+struct coords *vector_nth(struct vector *v, size_t n)
+{
+    if (n >= v->size)
+        return NULL;
+    return v->data + n;
+}
+
+int main()
+{
+    printf("make vector\n");
+    struct vector* vect = vector_make(5);
+    printf("done\n");
+    printf("push back 8 elts\n");
+    fflush(stdout);
+    int tabval[] = {5,9,0,1,4,3,4,2};
+    for(int i = 0; i < 8; i++)
+    {
+        vector_push_back(vect,tabval[i]);
+    }
+    printf("done.\n");
+    print_vector(vect);
+    printf("pop back: ");
+    int x = -1;
+    printf(" > 0 :%d x: %d\n",vector_pop_back(vect,&x),x);
+    print_vector(vect);
+    printf("push front:\n");
+    vector_push_front(vect,6);
+    print_vector(vect);
+    printf("pop front: ");
+    x = -1;
+    printf(" > 0 :%d\n",vector_pop_front(vect,&x));
+    printf("x: %d_n",x);
+    print_vector(vect);
+    printf("insert at :\n");
+    vector_insert_at(vect,4,7);
+    print_vector(vect);
+    x = -1;
+    printf("extract at: test: %d,",vector_extract_at(vect,3,&x));
+    printf("val: %d\n",x);
+    print_vector(vect);
+    printf("copy:\n");
+    struct vector* copy_vect = vector_clone(vect);
+    print_vector(copy_vect);
+    free(copy_vect->data);
+    free(copy_vect);
+    free(vect->data);
+    free(vect);
+}
+=======
+>>>>>>> b33d7fa680680d6c3697333536e721039443730a
