@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
         filter_blackwhite(img);
         //display_image(img);
 	struct matrix *A = img_to_matrix(img);
+<<<<<<< HEAD
 	//struct coords test;
 	//test.h1 = 5;
 	//test.h2 = 10;
@@ -26,6 +27,17 @@ int main(int argc, char *argv[])
 	//vector_push_front(V, test);
 	//test_charseg(img, V);
 	//display_image(img);
+=======
+	struct coords test;
+	test.h1 = 5;
+	test.h2 = 50;
+	test.w1 = 5;
+	test.w2 = 10;
+	struct vector *V = vector_make(1);
+	vector_push_front(V, test);
+	test_charseg(img, V);
+	display_image(img);
+>>>>>>> 73ab1df2ef02c5537d82a36a11c718db8fc02a69
 	//struct vector *V = img_to_lines(A);
 	//struct vector *F = lines_to_char(A, V);
 	//test_charseg(img, F);
