@@ -5,6 +5,7 @@
 
 # include "pixel_operations.h"
 # include "vector.h"
+# include "loadimage.h"
 
 // BASIC FUNCTIONS
 
@@ -80,7 +81,7 @@ struct matrix *img_to_matrix(SDL_Surface *img)
         {
             pxl = getpixel(img, w, h);
             SDL_GetRGB(pxl, img->format, &r, &r, &r);
-            A[w * img->w + h] = r == 255 ? 1 : 0;
+            A->data[w * img->w + h] = r == 255 ? 1 : 0;
         }
     }
     return A;
@@ -88,14 +89,15 @@ struct matrix *img_to_matrix(SDL_Surface *img)
 
 // TESTING
 
-void test_charseg(SDL_Surface *img, struct vector *v)
+void test_charseg(SDL_Surface *originalimg, struct vector *v)
 {
-    Uint32 pxl = NULL;
+    SDL_Surface *img = CopySurface(originalimg);
+    Uint32 pxl;
     struct coords *c = NULL;
     int w, h;
-    for(size_t ci = 0; ci < v->size; i++)
+    for(size_t ci = 0; ci < v->size; ci++)
     {
-        c = vector_nth(v, i);
+        c = vector_nth(v, ci);
         w = c->w2 - c->w1;
         h = c->h2 - c->h1;
         for(int i = 0; i < w; i++)
@@ -109,6 +111,8 @@ void test_charseg(SDL_Surface *img, struct vector *v)
             putpixel(img, c->w1, c->h1 + i, pxl);
         }
     }
+    display_image(img);
+    SDL_FreeSurface(img);
 }
 
 
