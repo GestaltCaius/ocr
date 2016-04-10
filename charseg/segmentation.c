@@ -111,13 +111,21 @@ void test_charseg(SDL_Surface *img, struct vector *v)
     }
 }
 
-
-// LOUP's COMMENTS
 struct vector* img_to_lines(struct matrix *img)
 {
-    for(int h = 0;   ;h++)
+    int status = 0; // not on a line
+    for(int h = 0; h < img -> height ; h++)
     {
-	return NULL;
+	if(status)
+	{
+	    for(; h < img -> height && !line_is_empty(img, h); h++) { }
+	    status = 0;
+	}
+	else
+	{
+	    for(; h < img -> height && line_is_empty(img, h); h++) { }
+	    status = 1;
+	}
     }
 }
 
@@ -126,11 +134,11 @@ struct vector* lines_to_char(struct matrix *img, struct vector* lines)
     return NULL;
 }
 
-int line_empty(struct matrix *img, int line)
+int line_is_empty(struct matrix *img, int line)
 {
     int i = 0;
-    for(; i < matrix -> width && matrix -> data[] == 0; i++){ }
-    if (i == matrix -> width)
+    for(; i < img -> width && img -> data[line * width + i] == 0; i++){ }
+    if (i == img -> width)
 	return 1;
     else
 	return 0;
