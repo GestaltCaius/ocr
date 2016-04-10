@@ -8,7 +8,7 @@
 struct coords {
     int w1, w2;
     int h1, h2;
-}
+};
  
 struct vector {
   size_t        capacity, size;
