@@ -1,5 +1,6 @@
 # include "filters.h"
 
+
 // Greyscale 
 void filter_greyscale(SDL_Surface *img)
 {

@@ -1,14 +1,21 @@
+# include "resize.h"
 
 
-/*
-*double resize_table(struct coords, double[] table, int x, int y)
+double* resize_table(struct coords c, double table[], int x, int y)
 {
-    double *new_t = calloc(
-    for(int i = coords.x1; i <= coords.x2; i++)
-    {
-        for(int j = coords.y1; j <= coords.y2)
-        {
+    double ox = c.h2 - c.h1;
+    double oy = c.h2 - c.h1;
+    double modi = x / ox;
+    double modj = y / oy;
 
+    double *new_t = calloc(x*y,sizeof(double));
+    for(int i = 0; i < x; i++)
+    {
+        for(int j = 0; j <= y; j++)
+        {
+            new_t[i*x+j] = table[(int)(i*modi*ox+j*modj)];
         }
     }
-}*/
+
+    return new_t;
+}

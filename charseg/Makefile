@@ -3,8 +3,8 @@
 # Compilers and options
 CC=clang -g -fsanitize=address
 CPPFLAGS=
-CFLAGS= -Wall -Wextra -std=c99 -O3
-LDFLAGS=
+CFLAGS= -Wall -Wextra -std=c99 -O2
+LDFLAGS= 
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
 
 SRC= ${wildcard *.c}
@@ -13,7 +13,7 @@ OBJ= ${SRC:.c=.o}
 all: main
  
 main: ${OBJ}
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 	
 clean:
 	rm -f *~ *.o
