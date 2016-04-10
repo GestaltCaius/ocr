@@ -22,14 +22,14 @@ struct matrix* img_to_matrix(SDL_Surface *img)
     A -> data = malloc(sizeof(double) * (img->w * img->h));
     A -> width = img -> w;
     A -> height = img -> h;
-    for (int h = 0; h < 12; h++)
+    for (int h = 0; h < img->h; h++)
     {
-        for (int w = 0; w < 17; w++)
+        for (int w = 0; w < img->w; w++)
         {
-            pxl = getpixel(img, h, w);
+            pxl = getpixel(img, w, h);
             SDL_GetRGB(pxl, img->format, &r, &r, &r);
-            A->data[w * img->w + h] = r == 255 ? 0 : 1;
-	    printf("%d ", (int)(A->data[w * img->w + h]));
+            A->data[h * img->w + w] = r == 255 ? 0 : 1;
+	    printf("%d ", (int)(A->data[h * img->w + w]));
         }
 	printf("\n");
     }
@@ -55,23 +55,22 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v)
         {
             pxl = SDL_MapRGB(img->format, 0, 255, 0);
             putpixel(img, c->w1 + i, c->h1, pxl);
-	        putpixel(img, c->w1 + i, c->h2, pxl);
+	    putpixel(img, c->w1 + i, c->h1, pxl);
         }
         for(int i = 0; i < h; h++)
         {
             pxl = SDL_MapRGB(img->format, 0, 255, 0);
             putpixel(img, c->w1, c->h1 + i, pxl);
-            putpixel(img, c->w2, c->h1 + i, pxl);
         }
     }
     display_image(img);
     SDL_FreeSurface(img);
 }
 
- int line_is_empty(struct matrix *img, int line)
+int line_is_empty(struct matrix *img, int line)
 {   
     int i = 0;
-    for(; i < img -> width && img -> data[line * img->height + i] == 0; i++){ }
+    for(; i < img -> width && img -> data[line * img->width+ i] == 0; i++){ }
     if (i == img -> width)
         return 1;
     else
@@ -100,15 +99,14 @@ struct vector* img_to_lines(struct matrix *img)
     {
 	if(status)
 	{
-	    struct coords *line = malloc(sizeof(struct coords));
-	    line -> w1 = 1;
-	    line -> w2 = 1;
-	    line -> h1 = h;
+	    struct coords line;
+	    line. w1 = 1;
+	    line.w2 = 1;
+	    line.h1 = h;
 	    for(; h < img -> height && !line_is_empty(img, h); h++) { }
-	    line -> h2 = h - 1;
-	    vector_push_back(lines, *line);
+	    line.h2 = h - 1;
+	    vector_push_back(lines, line);
 	    status = 0;
-
 	}
 	else
 	{
