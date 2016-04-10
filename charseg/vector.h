@@ -76,7 +76,8 @@ int vector_extract_at(struct vector *vect, size_t pos, struct coords *x);
  * both storage contains the same elements but are not at the same memory place
  */
 struct vector* vector_clone(struct vector *vect);
- 
- 
+
+struct coords *vector_nth(struct vector *v, size_t n);
+
 # endif
 

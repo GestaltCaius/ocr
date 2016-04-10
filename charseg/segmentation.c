@@ -60,6 +60,7 @@ void print_coords(struct list_coords *list)
 // CHARACTER SEGMENTATION
 
 // img to matrix of 0's and 1's
+// 1 = black, 0 = white
 double *img_to_matrix(SDL_Surface *img)
 {
     Uint32 pxl;
@@ -77,6 +78,33 @@ double *img_to_matrix(SDL_Surface *img)
     return A;
 }
 
+// TESTING
+
+void test_charseg(SDL_Surface *img, struct vector *v)
+{
+    Uint32 pxl = NULL;
+    struct coords *c = NULL;
+    int w, h;
+    for(size_t ci = 0; ci < v->size; i++)
+    {
+        c = vector_nth(v, i);
+        w = c->w2 - c->w1;
+        h = c->h2 - c->h1;
+        for(int i = 0; i < w; i++)
+        {
+            pxl = SDL_MapRGB(img->format, 0, 255, 0);
+            putpixel(img, c->w1 + i, h, pxl);
+        }
+        for(int i = 0; i < h; h++)
+        {
+            pxl = SDL_MapRGB(img->format, 0, 255, 0);
+            putpixel(img, c->w1, c->h1 + i, pxl);
+        }
+    }
+}
+
+
+// LOUP's COMMENTS
 
 /* 
   Sends back the heights of the beginning (pos_1) and of the end (pos_2) of each line in the given image, 

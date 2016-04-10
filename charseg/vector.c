@@ -96,6 +96,8 @@ int vector_extract_at(struct vector *vect, size_t pos, struct coords *x)
     }
 }
 
+
+
 struct vector* vector_clone(struct vector *vect)
 {
     struct vector *newvect = vector_make(vect->capacity);
@@ -115,6 +117,13 @@ void print_vector(struct vector *vect)
         printf(" %d  |",(vect->data)[i]);
     }
     printf("\n----\n");
+}
+
+struct coords *vector_nth(struct vector *v, size_t n)
+{
+    if (n >= v->size)
+        return NULL;
+    return v->data + n;
 }
 
 int main()
