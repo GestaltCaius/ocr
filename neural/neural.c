@@ -393,7 +393,7 @@ if(argv[1][0] == '1') //xor
     size_t L[] = {2, 3, 1};
     struct network net = init_network(L,3);
     struct try *tr = init_try_xor();
-    train(&net, tr, 4, 10000, 1000);
+    train(&net, tr, 4, 20000, 1000);
     free_trys(tr, 4);
     free_network_neurons(&net);
     return 0;
@@ -404,7 +404,7 @@ if(argv[1][0] == '2') // 3 input 2 out ex
     size_t L[] = {3, 4, 2};
     struct network net = init_network(L,3);
     struct try *tr = init_try_3_2();
-    train(&net, tr, 8, 10000, 1000);
+    train(&net, tr, 8, 20000, 1000);
     free_trys(tr, 8);
     free_network_neurons(&net);
     return 0;
