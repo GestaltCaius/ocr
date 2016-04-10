@@ -19,6 +19,9 @@ struct vector* img_to_lines(struct matrix *img);
 
 struct vector* lines_to_char(struct matrix *img, struct vector *lines);
 
+void draw_square(SDL_Surface *img, struct coords square);
+
+void display_segmentation(SDL_Surface *img, struct vector *V);
 
 /*
  *

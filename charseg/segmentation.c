@@ -40,33 +40,30 @@ struct matrix* img_to_matrix(SDL_Surface *img)
 
 // TESTING
 
-void test_charseg(SDL_Surface *originalimg, struct vector *v)
+void draw_square(SDL_Surface *img, struct coords square)
 {
-    SDL_Surface *img = CopySurface(originalimg);
     Uint32 pxl;
-    struct coords *c = NULL;
-    int w, h;
-    for(size_t ci = 0; ci < v->size; ci++)
+    pxl = SDL_MapRGB(img->format, 0, 255, 0);
+    for(int i = square.h1; i <= square.h2; i++)
     {
-        c = vector_nth(v, ci);
-        w = c->w2 - c->w1;
-        h = c->h2 - c->h1;
-        for(int i = 0; i < w; i++)
-        {
-            pxl = SDL_MapRGB(img->format, 0, 255, 0);
-            putpixel(img, c->h1 + i, c->w1, pxl);
-            putpixel(img, c->h1 + i, c->w2, pxl);
-        }
-        for(int i = 0; i < h; i++)
-        {
-            pxl = SDL_MapRGB(img->format, 0, 255, 0);
-            putpixel(img, c->h1, c->w1 + i, pxl);
-            putpixel(img, c->h2, c->w1 + i, pxl);
-        }
-
+	putpixel(img, square.w1, i, pxl);
+	putpixel(img, square.w2, i, pxl);
     }
-    display_image(img);
-    SDL_FreeSurface(img);
+    for(int i = square.w1 + 1; i < square.w2 - 1; i++)
+    {
+	putpixel(img, i, square.h1, pxl);
+	putpixel(img, i, square.h2, pxl);
+    }
+}
+
+void display_segmentation(SDL_Surface *img, struct vector *V)
+{
+    size_t i = 0;
+    while(i < V->size)
+    {
+	draw_square(img, V->data[i]);
+	i++;
+    }
 }
 
 int line_is_empty(struct matrix *img, int line)
