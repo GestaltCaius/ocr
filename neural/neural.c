@@ -157,7 +157,7 @@ struct try* init_numbers_0_to_9(char *path)
                 Uint32 pixel = getpixel(img,j,k);
                 Uint8 r = 0, g = 0, b = 0;
                 SDL_GetRGB(pixel,img->format, &r, &g, &b);
-                Uint8 res = r = r * 0.3 + g*0.59 + b * 0.11;
+                Uint8 res = r * 0.3 + g*0.59 + b * 0.11;
                 if(res < 127)
                     trys[i].in[j*(img->w)+k] = 1;
                 else
