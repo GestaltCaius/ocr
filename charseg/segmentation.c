@@ -71,6 +71,19 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v)
         return 0;
 }
 
+int colone_is_empty(struct matrix *img, int x, int y1, int y2)
+{
+    int is_empty = 0;
+    int i = y1;
+    while(!is_empty && i <= y2)
+    {
+        is_empty = img->data[x*img->width + i] == 0;
+    }
+    return is_empty;
+}
+
+
+
 struct vector* img_to_lines(struct matrix *img)
 {
     struct vector *lines = vector_make((img -> height) * (img -> width));
@@ -98,6 +111,50 @@ struct vector* img_to_lines(struct matrix *img)
     }
     return lines;
 }
+
+
+struct vector *lines_to_char(struct matrix *img, struct vector *lines)
+{
+    struct vector *imgs = malloc(sizeof(struct vector));
+    for(size_t k = 0; k < lines->size; k++)
+    {
+    struct coords actual_coords;
+    actual_coords.w1 = 0;
+    actual_coords.w2 = 0;
+    actual_coords.h1 = lines->data[k].h1;
+    actual_coords.h2 = lines->data[k].h2;
+    int recording = 0;
+
+    for(int i = lines->data[k].h1; i < img->width; i++)
+    {
+        if(!recording)
+        {
+            if(!colone_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
+            {
+                recording = 1;
+                actual_coords.w1 = i;
+                actual_coords.w2 = i;
+            }
+        }
+        if(recording)
+        {
+            if(!colone_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
+            {
+                actual_coords.w2++;
+            }
+            else
+            {
+                actual_coords.w2--;
+                vector_push_back(imgs, actual_coords);
+                recording = 0;
+            }
+
+        }
+    }
+    }
+    return imgs;
+}
+
 
 /*struct vector* lines_to_char(struct matrix *img, struct vector* lines)
 {
