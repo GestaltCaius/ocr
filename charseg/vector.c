@@ -108,7 +108,7 @@ struct vector* vector_clone(struct vector *vect)
     return newvect;
 }
 
-void print_vector(struct vector *vect)
+/*void print_vector(struct vector *vect)
 {
     printf("----\ncapacity: %zu\nsize:%zu\n",vect->capacity,vect->size);
     printf("| ");
@@ -117,8 +117,10 @@ void print_vector(struct vector *vect)
         printf(" %d  |",(vect->data)[i]);
     }
     printf("\n----\n");
-}
+}*/
 
+
+<<<<<<< HEAD
 struct coords *vector_nth(struct vector *v, size_t n)
 {
     if (n >= v->size)
@@ -167,3 +169,5 @@ int main()
     free(vect->data);
     free(vect);
 }
+=======
+>>>>>>> b33d7fa680680d6c3697333536e721039443730a

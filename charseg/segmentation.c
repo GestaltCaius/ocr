@@ -4,6 +4,7 @@
 # include <SDL/SDL_image.h>
 
 # include "pixel_operations.h"
+# include "vector.h"
 
 // BASIC FUNCTIONS
 
@@ -60,12 +61,24 @@ void print_coords(struct list_coords *list)
 // CHARACTER SEGMENTATION
 
 // img to matrix of 0's and 1's
+<<<<<<< HEAD
 // 1 = black, 0 = white
 double *img_to_matrix(SDL_Surface *img)
+=======
+
+struct matrix {
+    double *data;
+    int width, height;
+};
+
+struct matrix *img_to_matrix(SDL_Surface *img)
+>>>>>>> b33d7fa680680d6c3697333536e721039443730a
 {
     Uint32 pxl;
     Uint8 r;
-    double *A = malloc(sizeof(double) * (img->w * img->h));
+    struct matrix *A = malloc(sizeof(struct matrix) * (img->w * img->h));
+    A -> width = img -> w;
+    A -> height = img -> h;
     for (int w = 0; w < img->w; w++)
     {
         for (int h = 0; h < img->h; h++)
@@ -78,6 +91,7 @@ double *img_to_matrix(SDL_Surface *img)
     return A;
 }
 
+<<<<<<< HEAD
 // TESTING
 
 void test_charseg(SDL_Surface *img, struct vector *v)
@@ -105,6 +119,37 @@ void test_charseg(SDL_Surface *img, struct vector *v)
 
 
 // LOUP's COMMENTS
+=======
+struct vector* img_to_lines(double *img)
+{
+    for(int h = 0;   ;h++)
+    {
+	return NULL;
+    }
+}
+
+struct vector* lines_to_char(double *img, struct vector* lines)
+{
+    return NULL;
+}
+
+int line_empty(struct matrix *img, int line)
+{
+    int i = 0;
+    for(; i < matrix -> width && img[] == 0; i++)
+    {
+	return 0;
+    }
+    else
+	return 1;
+}
+
+int column_empty(double *img, int line)
+{
+    return 0;
+}
+
+>>>>>>> b33d7fa680680d6c3697333536e721039443730a
 
 /* 
   Sends back the heights of the beginning (pos_1) and of the end (pos_2) of each line in the given image, 
