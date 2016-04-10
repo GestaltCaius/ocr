@@ -72,14 +72,14 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v)
  int line_is_empty(struct matrix *img, int line)
 {   
     int i = 0;
-    for(; i < img -> width && img -> data[line * img->width + i] == 0; i++){ }
+    for(; i < img -> width && img -> data[line * img->height + i] == 0; i++){ }
     if (i == img -> width)
         return 1;
     else
         return 0;
 }
 
-int colone_is_empty(struct matrix *img, int x, int y1, int y2)
+int column_is_empty(struct matrix *img, int x, int y1, int y2)
 {
     int is_empty = 0;
     int i = y1;
@@ -137,7 +137,7 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
     {
         if(!recording)
         {
-            if(!colone_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
+            if(!column_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
             {
                 recording = 1;
                 actual_coords.w1 = i;
@@ -146,7 +146,7 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
         }
         if(recording)
         {
-            if(!colone_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
+            if(!column_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
             {
                 actual_coords.w2++;
             }
