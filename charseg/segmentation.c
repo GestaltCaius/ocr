@@ -54,15 +54,16 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v)
         for(int i = 0; i < w; i++)
         {
             pxl = SDL_MapRGB(img->format, 0, 255, 0);
-            putpixel(img, c->w1 + i, c->h1, pxl);
-	        putpixel(img, c->w1 + i, c->h2, pxl);
+            putpixel(img, c->h1 + i, c->w1, pxl);
+            putpixel(img, c->h1 + i, c->w2, pxl);
         }
-        for(int i = 0; i < h; h++)
+        for(int i = 0; i < h; i++)
         {
             pxl = SDL_MapRGB(img->format, 0, 255, 0);
-            putpixel(img, c->w1, c->h1 + i, pxl);
-            putpixel(img, c->w2, c->h1 + i, pxl);
+            putpixel(img, c->h1, c->w1 + i, pxl);
+            putpixel(img, c->h2, c->w1 + i, pxl);
         }
+
     }
     display_image(img);
     SDL_FreeSurface(img);
@@ -181,6 +182,7 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
   To identify them and save them :  
     - we browse the image from the top to the bottom. 
     - when there is a big enough proportion (to determine) of black pixels in a single line and close to 
+
       one another, we consider that we're at the beginning of a line. we save the coordinates of the current 
       height in a struct coords (coords -> h = the height, coords -> w is irrelevant). 
     - We do the opposite than before : we browse every pixel line under the recorded one until we find one 
