@@ -55,12 +55,13 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v)
         {
             pxl = SDL_MapRGB(img->format, 0, 255, 0);
             putpixel(img, c->w1 + i, c->h1, pxl);
-	    putpixel(img, c->w1 + i, c->h1, pxl);
+	        putpixel(img, c->w1 + i, c->h2, pxl);
         }
         for(int i = 0; i < h; h++)
         {
             pxl = SDL_MapRGB(img->format, 0, 255, 0);
             putpixel(img, c->w1, c->h1 + i, pxl);
+            putpixel(img, c->w2, c->h1 + i, pxl);
         }
     }
     display_image(img);
