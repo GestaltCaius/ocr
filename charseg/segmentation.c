@@ -18,18 +18,23 @@ struct matrix* img_to_matrix(SDL_Surface *img)
 {
     Uint32 pxl;
     Uint8 r;
-    struct matrix *A = malloc(sizeof(struct matrix) * (img->w * img->h));
+    struct matrix* A = malloc(sizeof(struct matrix));
+    A -> data = malloc(sizeof(double) * (img->w * img->h));
     A -> width = img -> w;
     A -> height = img -> h;
-    for (int w = 0; w < img->w; w++)
+    for (int h = 0; h < 12; h++)
     {
-        for (int h = 0; h < img->h; h++)
+        for (int w = 0; w < 17; w++)
         {
-            pxl = getpixel(img, w, h);
+            pxl = getpixel(img, h, w);
             SDL_GetRGB(pxl, img->format, &r, &r, &r);
-            A->data[w * img->w + h] = r == 255 ? 1 : 0;
+            A->data[w * img->w + h] = r == 255 ? 0 : 1;
+	    printf("%d ", (int)(A->data[w * img->w + h]));
         }
+	printf("\n");
     }
+    printf("END");
+    fflush(stdout);
     return A;
 }
 
@@ -49,7 +54,8 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v)
         for(int i = 0; i < w; i++)
         {
             pxl = SDL_MapRGB(img->format, 0, 255, 0);
-            putpixel(img, c->w1 + i, h, pxl);
+            putpixel(img, c->w1 + i, c->h1, pxl);
+	    putpixel(img, c->w1 + i, c->h1, pxl);
         }
         for(int i = 0; i < h; h++)
         {

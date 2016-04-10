@@ -11,16 +11,25 @@ int main(int argc, char *argv[])
     {
         init_sdl();
         SDL_Surface *img = load_image(argv[1]);
-        display_image(img);
+        //display_image(img);
         filter_greyscale(img);
-        display_image(img);
+        //display_image(img);
         filter_blackwhite(img);
-        display_image(img);
+        //display_image(img);
 	struct matrix *A = img_to_matrix(img);
-	struct vector *V = img_to_lines(A);
-	struct vector *F = lines_to_char(A, V);
-	test_charseg(img, F);
+	struct coords test;
+	test.h1 = 5;
+	test.h2 = 10;
+	test.w1 = 5;
+	test.w2 = 30;
+	struct vector *V = vector_make(1);
+	vector_push_front(V, test);
+	test_charseg(img, V);
 	display_image(img);
+	//struct vector *V = img_to_lines(A);
+	//struct vector *F = lines_to_char(A, V);
+	//test_charseg(img, F);
+	//display_image(img);
 	SDL_FreeSurface(img);
         SDL_Quit();
     }
