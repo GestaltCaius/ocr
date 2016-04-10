@@ -1,3 +1,7 @@
+# ignore all expect all dot smthg
+*
+!*.*
+
 # Object files
 *.o
 *.ko
