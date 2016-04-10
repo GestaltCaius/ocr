@@ -9,6 +9,7 @@
 # include "loadimage.h"
 
 #include "neural.h"
+#include "weight_file.h"
 
 struct try{
     double *in; //essai entrée
@@ -157,7 +158,7 @@ struct try* init_numbers_0_to_9(char *path)
                 Uint32 pixel = getpixel(img,j,k);
                 Uint8 r = 0, g = 0, b = 0;
                 SDL_GetRGB(pixel,img->format, &r, &g, &b);
-                Uint8 res = r = r * 0.3 + g*0.59 + b * 0.11;
+                Uint8 res = r * 0.3 + g*0.59 + b * 0.11;
                 if(res < 127)
                     trys[i].in[j*(img->w)+k] = 1;
                 else
@@ -382,6 +383,7 @@ if(argv[1][0] == '1') //xor
     struct try *tr = init_try_xor();
     train(&net, tr, 4, 20000, 1000);
     free_trys(tr, 4);
+    save_network_to_file(&net, "xor_weights.txt");
     free_network_neurons(&net);
     return 0;
 }

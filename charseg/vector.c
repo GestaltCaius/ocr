@@ -7,7 +7,7 @@ struct vector* vector_make(size_t cap)
     struct vector *v = malloc(sizeof(struct vector));
     v->capacity = cap;
     v->size = 0;
-    v->data = malloc(cap*sizeof(int));
+    v->data = malloc(cap*sizeof(struct coords));
     return v;
 }
 
@@ -15,19 +15,19 @@ void check_size(struct vector *vect)
 {
     if(vect->size >= vect->capacity)
         {
-             vect->data = realloc(vect->data, (vect->capacity *= 2)*sizeof(int));
+             vect->data = realloc(vect->data, (vect->capacity *= 2)*sizeof(struct coords));
         }
 
 }
 
-void vector_push_back(struct vector *vect, int x)
+void vector_push_back(struct vector *vect, struct coords x)
 {
     check_size(vect);
     vect->data[vect->size] = x;
     vect->size++;
 }
 
-int  vector_pop_back(struct vector *vect, int *x)
+int  vector_pop_back(struct vector *vect, struct coords *x)
 {
     if(vect->size > 0)
     {   
@@ -38,7 +38,7 @@ int  vector_pop_back(struct vector *vect, int *x)
     else return 0;
 }
 
-void vector_push_front(struct vector *vect, int x)
+void vector_push_front(struct vector *vect, struct coords x)
 {
     check_size(vect);
     vect->size++;
@@ -49,7 +49,7 @@ void vector_push_front(struct vector *vect, int x)
     vect->data[0] = x;
 }
 
-int vector_pop_front(struct vector *vect, int *x)
+int vector_pop_front(struct vector *vect, struct coords *x)
 {
     if(vect->size > 0)
     {
@@ -64,7 +64,7 @@ int vector_pop_front(struct vector *vect, int *x)
     else return 0;
 }
 
-int vector_insert_at(struct vector *vect, size_t pos, int x)
+int vector_insert_at(struct vector *vect, size_t pos, struct coords x)
 {
     if(pos <= vect->size)
     {
@@ -80,7 +80,7 @@ int vector_insert_at(struct vector *vect, size_t pos, int x)
     else return 0;
 }
 
-int vector_extract_at(struct vector *vect, size_t pos, int *x)
+int vector_extract_at(struct vector *vect, size_t pos, struct coords *x)
 {
     if(vect->size == 0 || pos >= vect->size)
         return 0;
