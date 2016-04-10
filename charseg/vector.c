@@ -120,7 +120,6 @@ struct vector* vector_clone(struct vector *vect)
 }*/
 
 
-<<<<<<< HEAD
 struct coords *vector_nth(struct vector *v, size_t n)
 {
     if (n >= v->size)
@@ -128,7 +127,7 @@ struct coords *vector_nth(struct vector *v, size_t n)
     return v->data + n;
 }
 
-int main()
+/*int main()
 {
     printf("make vector\n");
     struct vector* vect = vector_make(5);
@@ -168,6 +167,4 @@ int main()
     free(copy_vect);
     free(vect->data);
     free(vect);
-}
-=======
->>>>>>> b33d7fa680680d6c3697333536e721039443730a
+}*/

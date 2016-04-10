@@ -7,60 +7,6 @@
 # include "vector.h"
 # include "loadimage.h"
 
-// BASIC FUNCTIONS
-
-/*
-struct list_coords list_empty(void)
-{
-	struct list_coords *l = malloc(sizeof(struct list_coords));
-	l -> next = NULL;
-	return l;
-}
-
-void list_push_front(struct list_coords *list, struct list_coords *cell)
-{
-	struct list_coords *elm = malloc(sizeof(stuct list_coords));
-	elm =  cell;
-	if (list_is_empty(list))
-	{
-		list -> next = elm;
-	}
-	else
-	{
-		elm -> next = list -> next -> next;
-		list -> next = elm;
-	}
-}
-
-struct list_coords* list_pop_front(struct list_coords *list)
-{
-	if (!list_is_empty(list))
-	{
-		struct list_coords *cell = malloc(sizeof(struct list_coords));
-		struct list_coords *tmp = list -> next;
-		cell = list -> next;
-		list -> next = list -> next -> next;
-		free(tmp);
-		return cell;
-	}
-	else
-		return NULL;
-}
-
-void print_coords(struct list_coords *list)
-{
-	while (list -> next != NULL)
-	{
-		prinf("(%d,%d) ", list -> next -> w, list -> next -> h);
-		struct list_coords *tmp = list;
-		list = list -> next;
-		free(tmp);
-	}
-	printf("|"); // end of the list
-}*/
-
-// CHARACTER SEGMENTATION
-
 // img to matrix of 0's and 1's
 // 1 = black, 0 = white
 struct matrix {
@@ -115,15 +61,34 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v)
     SDL_FreeSurface(img);
 }
 
+ int line_is_empty(struct matrix *img, int line)
+{   
+    int i = 0;
+    for(; i < img -> width && img -> data[line * img->width + i] == 0; i++){ }
+    if (i == img -> width)
+        return 1;
+    else
+        return 0;
+}
+
 struct vector* img_to_lines(struct matrix *img)
 {
+    struct vector *lines = vector_make((img -> height) * (img -> width));
     int status = 0; // not on a line
-    for(int h = 0; h < img -> height ; h++)
+    int h = 0;
+    for(; h < img -> height ; h++)
     {
 	if(status)
 	{
+	    struct coords *line = malloc(sizeof(struct coords));
+	    line -> w1 = 1;
+	    line -> w2 = 1;
+	    line -> h1 = h;
 	    for(; h < img -> height && !line_is_empty(img, h); h++) { }
+	    line -> h2 = h - 1;
+	    vector_push_back(lines, *line);
 	    status = 0;
+
 	}
 	else
 	{
@@ -131,27 +96,18 @@ struct vector* img_to_lines(struct matrix *img)
 	    status = 1;
 	}
     }
+    return lines;
 }
 
-struct vector* lines_to_char(struct matrix *img, struct vector* lines)
+/*struct vector* lines_to_char(struct matrix *img, struct vector* lines)
 {
     return NULL;
-}
+}*/
 
-int line_is_empty(struct matrix *img, int line)
-{
-    int i = 0;
-    for(; i < img -> width && img -> data[line * width + i] == 0; i++){ }
-    if (i == img -> width)
-	return 1;
-    else
-	return 0;
-}
-
-int column_empty(struct matrix *img, int line)
+/*int column_empty(struct matrix *img, int line)
 {
     return 0;
-}
+}*/
 
 /* 
   Sends back the heights of the beginning (pos_1) and of the end (pos_2) of each line in the given image, 
