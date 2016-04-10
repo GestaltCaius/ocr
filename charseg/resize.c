@@ -1,6 +1,6 @@
 
 
-
+/*
 *double resize_table(struct coords, double[] table, int x, int y)
 {
     double *new_t = calloc(
@@ -11,4 +11,4 @@
 
         }
     }
-}
+}*/

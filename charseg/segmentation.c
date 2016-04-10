@@ -4,6 +4,7 @@
 # include <SDL/SDL_image.h>
 
 # include "pixel_operations.h"
+# include "vector.h"
 
 // BASIC FUNCTIONS
 
@@ -60,11 +61,19 @@ void print_coords(struct list_coords *list)
 // CHARACTER SEGMENTATION
 
 // img to matrix of 0's and 1's
-double *img_to_matrix(SDL_Surface *img)
+
+struct matrix {
+    double *data;
+    int width, height;
+};
+
+struct matrix *img_to_matrix(SDL_Surface *img)
 {
     Uint32 pxl;
     Uint8 r;
-    double *A = malloc(sizeof(double) * (img->w * img->h));
+    struct matrix *A = malloc(sizeof(struct matrix) * (img->w * img->h));
+    A -> width = img -> w;
+    A -> height = img -> h;
     for (int w = 0; w < img->w; w++)
     {
         for (int h = 0; h < img->h; h++)
@@ -75,6 +84,35 @@ double *img_to_matrix(SDL_Surface *img)
         }
     }
     return A;
+}
+
+struct vector* img_to_lines(double *img)
+{
+    for(int h = 0;   ;h++)
+    {
+	return NULL;
+    }
+}
+
+struct vector* lines_to_char(double *img, struct vector* lines)
+{
+    return NULL;
+}
+
+int line_empty(struct matrix *img, int line)
+{
+    int i = 0;
+    for(; i < matrix -> width && img[] == 0; i++)
+    {
+	return 0;
+    }
+    else
+	return 1;
+}
+
+int column_empty(double *img, int line)
+{
+    return 0;
 }
 
 
