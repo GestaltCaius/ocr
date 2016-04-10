@@ -80,13 +80,13 @@ struct matrix *img_to_matrix(SDL_Surface *img)
         {
             pxl = getpixel(img, w, h);
             SDL_GetRGB(pxl, img->format, &r, &r, &r);
-            A[w * img->w + h] = r == 255 ? 1 : 0;
+            A-> data[w * img->w + h] = r == 255 ? 1 : 0;
         }
     }
     return A;
 }
 
-struct vector* img_to_lines(double *img)
+struct vector* img_to_lines(struct matrix *img)
 {
     for(int h = 0;   ;h++)
     {
@@ -94,7 +94,7 @@ struct vector* img_to_lines(double *img)
     }
 }
 
-struct vector* lines_to_char(double *img, struct vector* lines)
+struct vector* lines_to_char(struct matrix *img, struct vector* lines)
 {
     return NULL;
 }
@@ -102,15 +102,14 @@ struct vector* lines_to_char(double *img, struct vector* lines)
 int line_empty(struct matrix *img, int line)
 {
     int i = 0;
-    for(; i < matrix -> width && img[] == 0; i++)
-    {
-	return 0;
-    }
-    else
+    for(; i < matrix -> width && matrix -> data[] == 0; i++){ }
+    if (i == matrix -> width)
 	return 1;
+    else
+	return 0;
 }
 
-int column_empty(double *img, int line)
+int column_empty(struct matrix *img, int line)
 {
     return 0;
 }
