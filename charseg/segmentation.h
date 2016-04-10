@@ -4,6 +4,21 @@
 # include <SDL/SDL_image.h>
 # include "pixel_operations.h"
 # include "loadimage.h"
+# include "vector.h"
+
+/*struct matrix {
+    double *data;
+    int width, height;
+};*/
+
+void test_charseg(SDL_Surface *originalimg, struct vector *v);
+
+struct matrix* img_to_matrix(SDL_Surface *img);
+
+struct vector* img_to_lines(struct matrix *img);
+
+struct vector* lines_to_char(struct matrix *img, struct vector *lines);
+
 
 /*
  *

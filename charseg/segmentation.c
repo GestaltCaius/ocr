@@ -14,7 +14,7 @@ struct matrix {
     int width, height;
 };
 
-struct matrix *img_to_matrix(SDL_Surface *img)
+struct matrix* img_to_matrix(SDL_Surface *img)
 {
     Uint32 pxl;
     Uint8 r;
