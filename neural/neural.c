@@ -378,7 +378,7 @@ srand(time(NULL));
 
 if(argv[1][0] == '1') //xor
 {
-    size_t L[] = {2, 3, 1};
+    size_t L[] = {2, 4, 1};
     struct network net = init_network(L,3);
     struct try *tr = init_try_xor();
     train(&net, tr, 4, 20000, 1000);
@@ -390,7 +390,7 @@ if(argv[1][0] == '1') //xor
 
 if(argv[1][0] == '2') // 3 input 2 out ex
 {
-    size_t L[] = {3, 4, 2};
+    size_t L[] = {3, 7, 2};
     struct network net = init_network(L,3);
     struct try *tr = init_try_3_2();
     train(&net, tr, 8, 20000, 1000);
@@ -401,7 +401,7 @@ if(argv[1][0] == '2') // 3 input 2 out ex
 
 if(argv[1][0] == '3')
 {
-    size_t L[] = {17*12, 10, 10};
+    size_t L[] = {17*12, 20, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
     train(&net, tr, 10, 100000, 10000);
