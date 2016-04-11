@@ -150,12 +150,12 @@ struct try* init_numbers_0_to_9(char *path)
         trys[i].in = calloc(img->w*img->h,sizeof(double));
         
         //fill array
-        printf("%d ",img->w*img->h);
+        printf("%d \n",img->w*img->h);
         for(int j = 0; j < img->w; j++)
         {
             for(int k = 0; k < img->h; k++)
             {
-                Uint32 pixel = getpixel(img,j,k);
+                Uint32 pixel = getpixel(img,k,j);
                 Uint8 r = 0, g = 0, b = 0;
                 SDL_GetRGB(pixel,img->format, &r, &g, &b);
                 Uint8 res = r * 0.3 + g*0.59 + b * 0.11;
@@ -191,6 +191,19 @@ double* get_out(struct network net)
     for(size_t i = 0; i < net.L[net.nL - 1]; i++)
     {
         out[i] = net.n[net.nL - 1][i].lout;
+    }
+    return out;
+}
+
+int* get_bin_out(struct network net)
+{
+    int *out = calloc(net.L[net.nL - 1], sizeof(double));
+    for(size_t i = 0; i < net.L[net.nL - 1]; i++)
+    {
+        if(net.n[net.nL - 1][i].lout > 0.1)
+			out[i] = 1;
+		else
+			out[i] = 0;
     }
     return out;
 }
@@ -401,10 +414,10 @@ if(argv[1][0] == '2') // 3 input 2 out ex
 
 if(argv[1][0] == '3')
 {
-    size_t L[] = {17*12, 10, 10};
+    size_t L[] = {16*16, 10, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 100000, 10000);
+    train(&net, tr, 10, 100000, 100000);
     free_trys(tr, 10);
     free_network_neurons(&net);
     return 0;
