@@ -1,5 +1,6 @@
 # include <stdio.h>
 # include <stdlib.h>
+#include <string.h>
 # include "vector.h"
 
 struct vector* vector_make(size_t cap)
@@ -101,10 +102,7 @@ int vector_extract_at(struct vector *vect, size_t pos, struct coords *x)
 struct vector* vector_clone(struct vector *vect)
 {
     struct vector *newvect = vector_make(vect->capacity);
-    for(size_t i = 0; i < vect->size; i++)
-    {
-        vector_push_back(newvect, vect->data[i]);
-    }
+    memcpy(newvect->data, vect->data, vect->size*sizeof(struct coords));
     return newvect;
 }
 
