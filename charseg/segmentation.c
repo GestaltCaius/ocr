@@ -178,23 +178,30 @@ struct vector *resize_char(struct matrix *img, struct vector *chars)
 
 double *resize_table(struct coords c, struct matrix *A, int x, int y)
 {
-    double ox = c.w2 - c.w1;
-    double oy = c.h2 - c.h1;
-    double modi = ox / x;
-    double modj = oy / y;
+    int s_w = c.w2 - c.w1;
+    int s_h = c.h2 - c.h1;
+    printf("%d - %d", s_w,s_h);
+    fflush(stdout);
+    if(s_w >= x || s_h >= y)
+        return NULL;
 
     double *new_t = calloc(x*y,sizeof(double));
+    
     for(int i = 0; i < x; i++)
     {
         for(int j = 0; j < y; j++)
         {
-            printf("// %d\n", (int)(i*modi*ox+j*modj));
-            new_t[i*x+j] = A->data[(int)((c.w1+i*modi)*A->width+c.h1+j*modj)];
+            if(i < s_w && j < s_h)
+            {
+                new_t[i * x + j] = A->data[(c.w1+i) * A->width + (c.h1+j)];
+            }
+            else
+            {
+                new_t[i * x + j] = 0;
+            }
         }
     }
-    printf("%d - %d: %f\n", (int)(ox), (int)(x),modi);
-    printf("%d - %d: %f\n", (int)(oy), (int)(y),modj);
-
+    
     return new_t;
 }
 
