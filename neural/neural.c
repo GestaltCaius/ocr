@@ -422,6 +422,18 @@ if(argv[1][0] == '3')
     free_network_neurons(&net);
     return 0;
 }
+
+if(argv[1][0] == '4')
+{
+    struct network* net = load_network_from_file("xor_weights.txt");
+    struct try *tr = init_try_xor();
+    train(net, tr, 4, 5, 1);
+    free_network_neurons(net);
+    free_trys(tr,4);
+    free(net->L);
+    free(net);
+    return 0;
+}
 printf("error args");
 printf("end");
 fflush(stdout);
