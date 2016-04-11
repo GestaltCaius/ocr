@@ -49,11 +49,13 @@ int main(int argc, char *argv[])
     for(size_t i = 0; i < F->size; i++)
     {
         double *Ta = resize_table(F->data[i],A, 16, 16);
+        printf("// resize done %zu \n", i);
+        fflush(stdout);
         for(int i = 0; i < 16; i++)
         {
             for(int j = 0; j < 16; j++)
             {
-                printf("%d ",(int)Ta[i * 16 + 16]);
+                printf("%d ",(int)Ta[i * 16 + j]);
             }
             printf("\n");
         }
@@ -61,6 +63,7 @@ int main(int argc, char *argv[])
     }
     
     printf("FIN");
+    fflush(stdout);
 	SDL_FreeSurface(img);
         SDL_Quit();
     }

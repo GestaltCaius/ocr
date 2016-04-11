@@ -180,17 +180,20 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y)
 {
     double ox = c.w2 - c.w1;
     double oy = c.h2 - c.h1;
-    double modi = x / ox;
-    double modj = y / oy;
+    double modi = ox / x;
+    double modj = oy / y;
 
     double *new_t = calloc(x*y,sizeof(double));
     for(int i = 0; i < x; i++)
     {
-        for(int j = 0; j <= y; j++)
+        for(int j = 0; j < y; j++)
         {
-            new_t[i*x+j] = A->data[(int)(i*modi*ox+j*modj)];
+            printf("// %d\n", (int)(i*modi*ox+j*modj));
+            new_t[i*x+j] = A->data[(int)((c.w1+i*modi)*A->width+c.h1+j*modj)];
         }
     }
+    printf("%d - %d: %f\n", (int)(ox), (int)(x),modi);
+    printf("%d - %d: %f\n", (int)(oy), (int)(y),modj);
 
     return new_t;
 }
