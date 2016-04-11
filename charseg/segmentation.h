@@ -6,10 +6,10 @@
 # include "loadimage.h"
 # include "vector.h"
 
-/*struct matrix {
+struct matrix {
     double *data;
     int width, height;
-};*/
+};
 
 void test_charseg(SDL_Surface *originalimg, struct vector *v);
 
@@ -20,6 +20,8 @@ struct vector* img_to_lines(struct matrix *img);
 struct vector* lines_to_char(struct matrix *img, struct vector *lines);
 
 struct vector *resize_char(struct matrix *img, struct vector *chars);
+
+double *resize_table(struct coords c, struct matrix *A, int x, int y);
 
 void draw_square(SDL_Surface *img, struct coords square);
 

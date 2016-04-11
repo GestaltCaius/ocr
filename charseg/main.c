@@ -43,9 +43,24 @@ int main(int argc, char *argv[])
     
     display_segmentation(img, F);
 
-
+    
 	display_image(img);
-	printf("FIN");
+	
+    for(size_t i = 0; i < F->size; i++)
+    {
+        double *Ta = resize_table(F->data[i],A, 16, 16);
+        for(int i = 0; i < 16; i++)
+        {
+            for(int j = 0; j < 16; j++)
+            {
+                printf("%d ",(int)Ta[i * 16 + 16]);
+            }
+            printf("\n");
+        }
+        printf("\n\n");
+    }
+    
+    printf("FIN");
 	SDL_FreeSurface(img);
         SDL_Quit();
     }

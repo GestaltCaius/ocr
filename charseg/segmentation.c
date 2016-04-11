@@ -6,13 +6,13 @@
 # include "pixel_operations.h"
 # include "vector.h"
 # include "loadimage.h"
-
+# include "segmentation.h"
 // img to matrix of 0's and 1's
 // 1 = black, 0 = white
-struct matrix {
+/*struct matrix {
     double *data;
     int width, height;
-};
+};*/
 
 struct matrix* img_to_matrix(SDL_Surface *img)
 {
@@ -175,6 +175,26 @@ struct vector *resize_char(struct matrix *img, struct vector *chars)
     return chars;
 
 }
+
+double *resize_table(struct coords c, struct matrix *A, int x, int y)
+{
+    double ox = c.w2 - c.w1;
+    double oy = c.h2 - c.h1;
+    double modi = x / ox;
+    double modj = y / oy;
+
+    double *new_t = calloc(x*y,sizeof(double));
+    for(int i = 0; i < x; i++)
+    {
+        for(int j = 0; j <= y; j++)
+        {
+            new_t[i*x+j] = A->data[(int)(i*modi*ox+j*modj)];
+        }
+    }
+
+    return new_t;
+}
+
 
 /*struct vector* lines_to_char(struct matrix *img, struct vector* lines)
 {
