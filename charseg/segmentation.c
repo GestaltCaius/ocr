@@ -71,13 +71,9 @@ int line_is_empty(struct matrix *img, int line)
 
 int column_is_empty(struct matrix *img, int x, int y1, int y2)
 {
-    int is_empty = 0;
     int i = y1;
-    while(!is_empty && i <= y2)
-    {
-        is_empty = img->data[x*img->width + i] == 0;
-    }
-    return is_empty;
+    for(; i < y2 && img->data[i * img->width + x] == 0;i++) {}
+    return i == y2;
 }
 
 
@@ -112,9 +108,13 @@ struct vector* img_to_lines(struct matrix *img)
 
 struct vector *lines_to_char(struct matrix *img, struct vector *lines)
 {
-    struct vector *imgs = malloc(sizeof(struct vector));
+    struct vector *imgs = vector_make((img -> height) * (img -> width));
+    //printf("// begin\n");
+    //fflush(stdout);
     for(size_t k = 0; k < lines->size; k++)
     {
+    //printf("// %zu | %zu: \n", k, lines->size);
+    //fflush(stdout);
     struct coords actual_coords;
     actual_coords.w1 = 0;
     actual_coords.w2 = 0;
@@ -122,8 +122,9 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
     actual_coords.h2 = lines->data[k].h2;
     int recording = 0;
 
-    for(int i = lines->data[k].h1; i < img->width; i++)
+    for(int i = 0; i < img->width; i++)
     {
+        //printf("// %d | %d - %d\n", i, img->width, img->height);
         if(!recording)
         {
             if(!column_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
@@ -133,7 +134,7 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
                 actual_coords.w2 = i;
             }
         }
-        if(recording)
+        else
         {
             if(!column_is_empty(img,i,lines->data[k].h1,lines->data[k].h2))
             {
@@ -142,6 +143,7 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
             else
             {
                 actual_coords.w2--;
+                printf("//push back\n");
                 vector_push_back(imgs, actual_coords);
                 recording = 0;
             }

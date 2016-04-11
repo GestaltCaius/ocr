@@ -25,8 +25,23 @@ int main(int argc, char *argv[])
 	//struct vector *V = vector_make(1);
 	//vector_push_front(V, test);
 	struct vector *V = img_to_lines(A);
-	//struct vector *F = lines_to_char(A, V);
-	display_segmentation(img, V);
+	
+    for(size_t i = 0; i < V->size; i++)
+    {
+        printf("%d - %d\n",V->data[i].h1,V->data[i].h2);
+    }
+    
+    
+    struct vector *F = lines_to_char(A, V);
+    printf("%zu\n",F->size);
+    fflush(stdout);
+	for(size_t i = 0; i < F->size; i++)
+    {
+        printf("%zu | %d - %d\n%d - %d\n",i,F->data[i].h1,F->data[i].w1,F->data[i].h2,F->data[i].w2);
+    }
+    display_segmentation(img, F);
+
+
 	display_image(img);
 	printf("FIN");
 	SDL_FreeSurface(img);
