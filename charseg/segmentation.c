@@ -180,7 +180,7 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y)
 {
     int s_w = c.w2 - c.w1;
     int s_h = c.h2 - c.h1;
-    printf("%d - %d", s_w,s_h);
+    printf("%d - %d\n", s_w,s_h);
     fflush(stdout);
     if(s_w >= x || s_h >= y)
         return NULL;
@@ -191,9 +191,9 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y)
     {
         for(int j = 0; j < y; j++)
         {
-            if(i < s_w && j < s_h)
+            if(j < s_w && i < s_h)
             {
-                new_t[i * x + j] = A->data[(c.w1+i) * A->width + (c.h1+j)];
+                new_t[i * x + j] = A->data[(c.h1+i) * A->width + (c.w1+j)];
             }
             else
             {
