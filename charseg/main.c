@@ -33,12 +33,14 @@ int main(int argc, char *argv[])
     
     
     struct vector *F = lines_to_char(A, V);
+    F = resize_char(A,F);
     printf("%zu\n",F->size);
     fflush(stdout);
-	for(size_t i = 0; i < F->size; i++)
+/*	for(size_t i = 0; i < F->size; i++)
     {
         printf("%zu | %d - %d\n%d - %d\n",i,F->data[i].h1,F->data[i].w1,F->data[i].h2,F->data[i].w2);
-    }
+    }*/
+    
     display_segmentation(img, F);
 
 

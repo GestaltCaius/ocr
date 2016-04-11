@@ -76,6 +76,12 @@ int column_is_empty(struct matrix *img, int x, int y1, int y2)
     return i == y2;
 }
 
+int small_line_is_empty(struct matrix *img, int y, int w1, int w2)
+{
+    int i = w1;
+    for(; i < w2 && img->data[y * img->width + i] == 0; i++) { }
+    return i == w2;
+}
 
 
 struct vector* img_to_lines(struct matrix *img)
@@ -152,6 +158,23 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
     return imgs;
 }
 
+struct vector *resize_char(struct matrix *img, struct vector *chars)
+{
+    for(size_t i = 0; i < chars->size; i++)
+    {
+        while(small_line_is_empty(img, chars->data[i].h1, chars->data[i].w1, chars->data[i].w2))
+        {
+            chars->data[i].h1++;
+        }
+        
+        while(small_line_is_empty(img, chars->data[i].h2, chars->data[i].w1, chars->data[i].w2))
+        {
+            chars->data[i].h2--;
+        }
+    }
+    return chars;
+
+}
 
 /*struct vector* lines_to_char(struct matrix *img, struct vector* lines)
 {
