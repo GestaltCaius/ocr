@@ -207,9 +207,9 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y)
             {
                 new_t[i * x + j] = 0;
             }
-            printf("%d ",(int)new_t[i * x + j]);
+            //printf("%d ",(int)new_t[i * x + j]);
         }
-        printf("\n");
+        //printf("\n");
     }
     
     return new_t;

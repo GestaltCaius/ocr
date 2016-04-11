@@ -30,7 +30,7 @@ void filter_blackwhite(SDL_Surface *img)
         {
             pxl = getpixel(img, w, h);
             SDL_GetRGB(pxl, img->format, &r, &r, &r);
-            r = r > 100 ? 255 : 0;
+            r = r > 255/2 ? 255 : 0;
             pxl = SDL_MapRGB(img->format, r, r, r);
             putpixel(img, w, h, pxl);
         }
