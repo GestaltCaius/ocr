@@ -90,7 +90,7 @@ struct vector* img_to_lines(struct matrix *img)
 	    struct coords line;
 	    line. w1 = 1;
 	    line.w2 = 1;
-	    line.h1 = h;
+	    line.h1 = h - 1;
 	    for(; h < img -> height && !line_is_empty(img, h); h++) { }
 	    line.h2 = h - 1;
 	    vector_push_back(lines, line);
@@ -142,8 +142,6 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
             }
             else
             {
-                actual_coords.w2--;
-                printf("//push back\n");
                 vector_push_back(imgs, actual_coords);
                 recording = 0;
             }
