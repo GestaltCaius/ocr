@@ -13,10 +13,6 @@
 
 
 
-struct try{
-    double *in; //essai entrée
-    double *res; // essai resultat attendu
-};
 
 // inits fonctions
 struct neuron init_neuron(size_t nw, int ent)

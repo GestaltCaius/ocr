@@ -15,4 +15,26 @@ struct network{
     struct neuron **n; // tableau de neurone (L[i] * nl);
 };
 
+struct try{
+    double *in; //essai entrée
+    double *res; // essai resultat attendu
+};
+
+
+struct neuron init_neuron(size_t nw, int ent);
+
+void free_network_neurons(struct network* net);
+
+struct network init_network(size_t *L, size_t nL);
+
+struct try* init_numbers_0_to_9(char *path);
+
+double* get_out(struct network net);
+
+int* get_bin_out(struct network net);
+
+void feedforward(struct network *n, double *in);
+
+void train(struct network *net, struct try *tr, size_t nbval, size_t nite, size_t display);
+
 #endif
