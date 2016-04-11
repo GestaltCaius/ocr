@@ -2,6 +2,7 @@
 # include "filters.h"
 # include "loadimage.h"
 # include "segmentation.h"
+# include "neural.h"
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
 
