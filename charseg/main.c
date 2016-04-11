@@ -37,7 +37,7 @@ struct network tr_and_init_network()
     size_t L[] = {16*16, 10, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 100000, 10000);
+    train(&net, tr, 10, 100000, 0);
     return net;
 }
 
@@ -59,12 +59,16 @@ void small_ocr(struct network *net, char *fname, struct matrix *A, struct vector
     printf(" == BEGIN OCR == \n");
     for(size_t i = 0; i < F->size; i++)
     {
+        if(F->data[i].w1 < 0)
+            printf("\n");
+        else
+        {
         double *in = resize_table(F->data[i],A, 16, 16);
         feedforward(net,in);
         int *out = get_bin_out(*net);
         char res = array_to_char(out);
-        fprintf(file, "%c", res);
         printf("%c",res);
+        }
     }
 }
 int main(int argc, char *argv[])
@@ -77,7 +81,7 @@ int main(int argc, char *argv[])
         filter_greyscale(img);
         //display_image(img);
         filter_blackwhite(img);
-        //display_image(img);
+        display_image(img);
 	struct matrix *A = img_to_matrix(img);
 	//struct coords test;
 	//test.h1 = 5;

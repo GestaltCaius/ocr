@@ -57,8 +57,11 @@ void display_segmentation(SDL_Surface *img, struct vector *V)
     size_t i = 0;
     while(i < V->size)
     {
-	draw_square(img, V->data[i]);
-	i++;
+        if(V->data[i].w1 >= 0)
+        {
+	        draw_square(img, V->data[i]);
+	    }
+        i++;
     }
 }
 
@@ -154,6 +157,8 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
 
         }
     }
+    actual_coords.w1 = -1;
+    vector_push_back(imgs, actual_coords);
     }
     return imgs;
 }
@@ -162,6 +167,8 @@ struct vector *resize_char(struct matrix *img, struct vector *chars)
 {
     for(size_t i = 0; i < chars->size; i++)
     {
+        if(chars->data[i].w1 >= 0)
+        {
         while(small_line_is_empty(img, chars->data[i].h1, chars->data[i].w1, chars->data[i].w2))
         {
             chars->data[i].h1++;
@@ -170,6 +177,7 @@ struct vector *resize_char(struct matrix *img, struct vector *chars)
         while(small_line_is_empty(img, chars->data[i].h2, chars->data[i].w1, chars->data[i].w2))
         {
             chars->data[i].h2--;
+        }
         }
     }
     return chars;
@@ -191,7 +199,7 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y)
     {
         for(int j = 0; j < y; j++)
         {
-            if(j < s_w && i < s_h)
+            if(j <= s_w && i <= s_h)
             {
                 new_t[i * x + j] = A->data[(c.h1+i) * A->width + (c.w1+j)];
             }
@@ -199,7 +207,9 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y)
             {
                 new_t[i * x + j] = 0;
             }
+            printf("%d ",(int)new_t[i * x + j]);
         }
+        printf("\n");
     }
     
     return new_t;
