@@ -5,7 +5,7 @@ CC=clang -g -fsanitize=address
 CPPFLAGS=
 CFLAGS= -Wall -Wextra -std=c99 -O2
 LDFLAGS= 
-LDLIBS= `pkg-config --libs sdl` -lSDL_image
+LDLIBS= `pkg-config --libs sdl` -lSDL_image -lm
 
 SRC= ${wildcard *.c}
 OBJ= ${SRC:.c=.o}
