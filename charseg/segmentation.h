@@ -15,6 +15,8 @@ void test_charseg(SDL_Surface *originalimg, struct vector *v);
 
 struct matrix* img_to_matrix(SDL_Surface *img);
 
+void free_matrix(struct matrix *A);
+
 struct vector* img_to_lines(struct matrix *img);
 
 struct vector* lines_to_char(struct matrix *img, struct vector *lines);

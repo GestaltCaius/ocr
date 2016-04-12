@@ -20,7 +20,9 @@ struct vector {
  * with initial storage size capacity
  */
 struct vector* vector_make(size_t capacity);
- 
+
+
+void free_vector(struct vector *vect); 
 /*
  * vector_push_back(vect, x) add x at the end of vect
  * if vect is full increase capacity

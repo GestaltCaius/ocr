@@ -11,6 +11,12 @@ struct vector* vector_make(size_t cap)
     return v;
 }
 
+void free_vector(struct vector *vect)
+{
+    free(vect->data);
+    free(vect);
+}
+
 void check_size(struct vector *vect)
 {
     if(vect->size >= vect->capacity)

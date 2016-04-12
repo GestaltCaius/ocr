@@ -46,6 +46,8 @@ struct vector* create_vector(struct matrix *A)
     struct vector *V = img_to_lines(A);
     struct vector *F = lines_to_char(A, V);
     F = resize_char(A,F);
+    free_vector(V);
+    //free_vector(V2);
     return F;
 }
 
@@ -92,7 +94,7 @@ int main(int argc, char *argv[])
     struct vector *F = create_vector(A); 
     
     display_segmentation(img, F);
-
+    
     
 	display_image(img);
     if(argc == 3)
@@ -106,7 +108,10 @@ int main(int argc, char *argv[])
         fflush(stdout);
 	    SDL_FreeSurface(img);
         SDL_Quit();
-        }
+        free_network_neurons(&net);
+    }
+    free_vector(F);
+    free_matrix(A);
     }
     else
     {

@@ -36,6 +36,12 @@ struct matrix* img_to_matrix(SDL_Surface *img)
     return A;
 }
 
+void free_matrix(struct matrix *A)
+{
+    free(A->data);
+    free(A);
+}
+
 void draw_square(SDL_Surface *img, struct coords square)
 {
     Uint32 pxl;
