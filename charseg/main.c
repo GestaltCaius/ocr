@@ -60,7 +60,10 @@ void small_ocr(struct network *net, char *fname, struct matrix *A, struct vector
     for(size_t i = 0; i < F->size; i++)
     {
         if(F->data[i].w1 < 0)
+        {
             printf("\n");
+            fprintf(file,"\n");
+        }
         else
         {
         double *in = resize_table(F->data[i],A, 16, 16);
@@ -68,8 +71,10 @@ void small_ocr(struct network *net, char *fname, struct matrix *A, struct vector
         int *out = get_bin_out(*net);
         char res = array_to_char(out);
         printf("%c",res);
+        fprintf(file,"%c",res);
         }
     }
+    fclose(file);
 }
 int main(int argc, char *argv[])
 {
