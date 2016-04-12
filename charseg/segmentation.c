@@ -199,7 +199,7 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y)
     if(s_w >= x || s_h >= y)
         return NULL;
 
-    double *new_t = malloc(x*y*sizeof(double));
+    double *new_t = calloc(x*y,sizeof(double));
     
     for(int i = 0; i < x; i++)
     {

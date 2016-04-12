@@ -75,6 +75,9 @@ void small_ocr(struct network *net, char *fname, struct matrix *A, struct vector
         char res = array_to_char(out);
         printf("%c",res);
         fprintf(file,"%c",res);
+        free(in);
+        free(out);
+        fflush(stdout);
         }
     }
     fclose(file);
