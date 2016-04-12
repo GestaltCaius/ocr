@@ -417,7 +417,7 @@ if(argv[1][0] == '3')
     size_t L[] = {16*16, 10, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 100000, 100000);
+    train(&net, tr, 10, 20000, 1000);
     free_trys(tr, 10);
     free_network_neurons(&net);
     return 0;
