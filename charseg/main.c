@@ -73,7 +73,7 @@ void small_ocr(struct network *net, char *fname, struct matrix *A, struct vector
 }
 int main(int argc, char *argv[])
 {
-    if (argc == 2)
+    if (argc == 2 || argc == 3)
     {
         init_sdl();
         SDL_Surface *img = load_image(argv[1]);
@@ -83,36 +83,25 @@ int main(int argc, char *argv[])
         filter_blackwhite(img);
         display_image(img);
 	struct matrix *A = img_to_matrix(img);
-	//struct coords test;
-	//test.h1 = 5;
-	//test.h2 = 10;
-	//test.w1 = 5;
-	//test.w2 = 30;
-	//struct vector *V = vector_make(1);
-	//vector_push_front(V, test);
     
     struct vector *F = create_vector(A); 
-    printf("%zu\n",F->size);
-    fflush(stdout);
-/*	for(size_t i = 0; i < F->size; i++)
-    {
-        printf("%zu | %d - %d\n%d - %d\n",i,F->data[i].h1,F->data[i].w1,F->data[i].h2,F->data[i].w2);
-    }*/
     
     display_segmentation(img, F);
 
     
 	display_image(img);
-	
-    struct network net = tr_and_init_network();
+    if(argc == 3)
+    {	
+        struct network net = tr_and_init_network();
 
 
-    small_ocr(&net, "out.txt",A,F);
+        small_ocr(&net, argv[2],A,F);
 
-    printf("\n == FIN == \n");
-    fflush(stdout);
-	SDL_FreeSurface(img);
+        printf("\n == FIN == \n");
+        fflush(stdout);
+	    SDL_FreeSurface(img);
         SDL_Quit();
+        }
     }
     else
     {
