@@ -1,7 +1,7 @@
 # Makefile
 
 #CC=clang -fsanitize=address
-CC=gcc -fsanitize=address
+CC=clang -fsanitize=address
 CPPFLAGS= -MMD -MP `pkg-config --cflags sdl`
 CFLAGS= -Wall -Wextra -pedantic -std=c99 -O2
 LDFLAGS=

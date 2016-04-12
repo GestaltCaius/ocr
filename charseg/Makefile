@@ -1,7 +1,7 @@
 # Basic Makefile
  
 # Compilers and options
-CC=clang -g -fsanitize=address
+CC=clang -fsanitize=address
 CPPFLAGS=
 CFLAGS= -Wall -Wextra -std=c99 -O2
 LDFLAGS= 

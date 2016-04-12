@@ -71,12 +71,12 @@ void small_ocr(struct network *net, char *fname, struct matrix *A, struct vector
         {
         double *in = resize_table(F->data[i],A, 16, 16);
         feedforward(net,in);
+        free(in);
         int *out = get_bin_out(*net);
         char res = array_to_char(out);
+        free(out);
         printf("%c",res);
         fprintf(file,"%c",res);
-        free(in);
-        free(out);
         fflush(stdout);
         }
     }
