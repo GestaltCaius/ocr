@@ -38,6 +38,7 @@ struct network tr_and_init_network()
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
     train(&net, tr, 10, 20000, 1000);
+    free_trys(tr, 10);
     return net;
 }
 
@@ -104,14 +105,15 @@ int main(int argc, char *argv[])
 
         small_ocr(&net, argv[2],A,F);
 
-        printf("\n == FIN == \n");
+        printf("\n == END == \n");
         fflush(stdout);
-	    SDL_FreeSurface(img);
-        SDL_Quit();
         free_network_neurons(&net);
     }
     free_vector(F);
     free_matrix(A);
+    SDL_FreeSurface(img);
+    SDL_Quit();
+
     }
     else
     {

@@ -29,6 +29,8 @@ struct network init_network(size_t *L, size_t nL);
 
 struct try* init_numbers_0_to_9(char *path);
 
+void free_trys(struct try* tries, size_t number);
+
 double* get_out(struct network net);
 
 int* get_bin_out(struct network net);

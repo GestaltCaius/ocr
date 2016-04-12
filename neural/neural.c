@@ -170,8 +170,9 @@ struct try* init_numbers_0_to_9(char *path)
         }
         (trys[i]).res = calloc(10,sizeof(double));
         (trys[i]).res[i] = 1;
-        free(img);
+        SDL_FreeSurface(img);
     }
+    SDL_Quit();
     return trys;
 }
 
