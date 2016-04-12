@@ -37,7 +37,7 @@ struct network tr_and_init_network()
     size_t L[] = {16*16, 10, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 100000, 0);
+    train(&net, tr, 10, 20000, 1000);
     return net;
 }
 
