@@ -62,7 +62,8 @@ void free_network_neurons(struct network* net)
 struct network init_network(size_t *L, size_t nL)
 {
     struct network new;
-    new.L = L;
+    new.L = calloc(nL, sizeof(size_t));
+    memcpy(new.L, L, nL*sizeof(size_t));
     new.nL = nL;
 
     // create neurons
@@ -146,6 +147,7 @@ struct try* init_numbers_0_to_9(char *path)
         //load image
         SDL_Surface *img = load_image(str);
         trys[i].in = calloc(img->w*img->h,sizeof(double));
+
         
         //fill array
         printf("%d \n",img->w*img->h);
@@ -245,6 +247,8 @@ void feedforward(struct network *n, double *in)
         {
             if(i == 0)
             {
+                /*printf("L[i]: %zu, j: %zu\n", n->L[i], j);
+                fflush(stdout);*/
                 (*n).n[i][j].lout = in[j];
             }
             else

@@ -37,7 +37,7 @@ struct network tr_and_init_network()
     size_t L[] = {16*16, 10, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 20000, 1000);
+    train(&net, tr, 10, 20000, 5000);
     free_trys(tr, 10);
     return net;
 }
@@ -69,6 +69,7 @@ void small_ocr(struct network *net, char *fname, struct matrix *A, struct vector
         }
         else
         {
+        //printf("net->L[0]: %zu\n",net->L[0]);
         double *in = resize_table(F->data[i],A, 16, 16);
         feedforward(net,in);
         free(in);
@@ -104,7 +105,6 @@ int main(int argc, char *argv[])
     if(argc == 3)
     {	
         struct network net = tr_and_init_network();
-
 
         small_ocr(&net, argv[2],A,F);
 

@@ -395,7 +395,7 @@ if(argv[1][0] == '1') //xor
     size_t L[] = {2, 4, 1};
     struct network net = init_network(L,3);
     struct try *tr = init_try_xor();
-    train(&net, tr, 4, 20000, 1000);
+    train(&net, tr, 4, 20000, 5000);
     free_trys(tr, 4);
     save_network_to_file(&net, "xor_weights.txt");
     free_network_neurons(&net);
@@ -407,7 +407,7 @@ if(argv[1][0] == '2') // 3 input 2 out ex
     size_t L[] = {3, 7, 2};
     struct network net = init_network(L,3);
     struct try *tr = init_try_3_2();
-    train(&net, tr, 8, 20000, 1000);
+    train(&net, tr, 8, 20000, 5000);
     free_trys(tr, 8);
     free_network_neurons(&net);
     return 0;
@@ -418,7 +418,7 @@ if(argv[1][0] == '3')
     size_t L[] = {16*16, 10, 10};
     struct network net = init_network(L,3);
     struct try *tr = init_numbers_0_to_9("./nbs/");
-    train(&net, tr, 10, 20000, 1000);
+    train(&net, tr, 10, 20000, 5000);
     free_trys(tr, 10);
     free_network_neurons(&net);
     return 0;
@@ -428,7 +428,7 @@ if(argv[1][0] == '4')
 {
     struct network* net = load_network_from_file("xor_weights.txt");
     struct try *tr = init_try_xor();
-    train(net, tr, 4, 5, 1);
+    train(net, tr, 4, 1, 1);
     free_network_neurons(net);
     free_trys(tr,4);
     free(net->L);
