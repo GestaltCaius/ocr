@@ -3,8 +3,7 @@
 
 #include "neural.h"
 
-int save_network_to_file(struct network* net, char* filename);
-struct network* load_network_from_file(char* filename);
-
+int save_network_to_file(struct network *net, char *filename);
+struct network *load_network_from_file(char *filename);
 
 #endif
