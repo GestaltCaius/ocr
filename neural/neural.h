@@ -3,10 +3,12 @@
 
 struct neuron {
     double *w;   // tableau de poids
+    double *lw;
     size_t nw;   // nbs de poids
     double b;    // bias
     double lder; // dernière valeur des dériver (error_der * sig_der)
     double lout; // dernière sortie
+    double lin; //dernière entrée
 };
 
 struct network {

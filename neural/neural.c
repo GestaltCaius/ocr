@@ -39,6 +39,7 @@ struct neuron init_neuron(size_t nw, int ent) {
     // set last vals to 0
     new.lder = 0;
     new.lout = 0;
+    new.lw = NULL;
 
     return new;
 }
@@ -46,7 +47,10 @@ struct neuron init_neuron(size_t nw, int ent) {
 void free_network_neurons(struct network *net) {
     for (size_t i = 0; i < net->nL; i++) {
         for (size_t j = 0; j < net->L[i]; j++)
+        {
             free(net->n[i][j].w);
+            free(net->n[i][j].lw);
+        }
         free(net->n[i]);
     }
     free(net->n);
@@ -202,6 +206,7 @@ double psigmoid(double z) {
 }
 
 double dif_error(double y, double ti) { return 0.5 * (y - ti) * (y - ti); }
+double dif_cross_error(double y, double ti) { return -ti*log(y)-(1-ti)*log(1-y); }
 
 double dot_product(struct neuron *a, double *b, size_t n) {
     double result = 0;
@@ -220,6 +225,7 @@ void feedforward(struct network *n, double *in) {
                 // zf = x[] . w[] + b
                 zj = dot_product((*n).n[i - 1], (*n).n[i][j].w, (*n).L[i - 1]) +
                      (*n).n[i][j].b;
+                (*n).n[i][j].lin = zj;
                 (*n).n[i][j].lout = sigmoid(zj);
             }
         }
@@ -267,6 +273,50 @@ void backpropa(struct network *n, double eta, struct try in) {
             }
         }
     }
+}
+
+void backpropagation(struct network *n, double k, struct try in)
+{
+    //Output layer
+    int l = n->nL-1;
+    for(size_t i = 0; i < n->L[l]; i++)
+    {
+        n->n[l][i].lder = n->n[l][i].lout - in.res[i];
+        //Weight adjustement
+
+        free(n->n[l][i].lw);
+        n->n[l][i].lw = malloc(sizeof(double) * n->L[l-1]);
+        memcpy(n->n[l][i].lw, n->n[l][i].w, sizeof(double) * n->L[l-1]);
+
+        for(size_t j = 0; j < n->L[l-1]; j++)
+        {
+            n->n[l][i].w[j] -= k * n->n[l-1][j].lout * n->n[l][i].lder;
+        }
+        n->n[l][i].b -= k * n->n[l][i].lder;
+    }
+
+    //Hidden layers
+    for(l = n->nL - 2; l > 0; l--)
+        for(size_t i = 0; i < n->L[l]; i++)
+        {
+            free(n->n[l][i].lw);
+            n->n[l][i].lw = malloc(sizeof(double) * n->L[l-1]);
+            memcpy(n->n[l][i].lw, n->n[l][i].w, sizeof(double) * n->L[l-1]);
+
+            n->n[l][i].lder = 0;
+            for(size_t j = 0; j < n->L[l+1]; j++)
+                n->n[l][i].lder += n->n[l+1][j].lder * n->n[l+1][j].lw[i];
+
+            n->n[l][i].lder /= n->L[l+1];
+            n->n[l][i].lder *= psigmoid(n->n[l][i].lin);
+
+            for(size_t w = 0; w < n->n[l][i].nw; w++)
+                n->n[l][i].w[w] -= k* n->n[l][i].lder
+                    //* n->n[l][i].lout
+                    * n->n[l-1][w].lout;
+
+            n->n[l][i].b -= k * n->n[l][i].lder;
+        }
 }
 
 // random sort array
@@ -322,7 +372,7 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite,
                 printf("\n");
                 free(result);
             }
-            backpropa(net, 0.1, tr[j]);
+            backpropagation(net, 0.1, tr[j]);
         }
 
         if (display > 0 && i % display == 0) {
