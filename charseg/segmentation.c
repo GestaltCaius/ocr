@@ -53,6 +53,8 @@ void display_segmentation(SDL_Surface *img, struct vector *V) {
     }
 }
 
+/* LINE DETECTION PART */
+
 int line_is_empty(struct matrix *img, int line) {
     int i = 0;
     for (; i < img->width && img->data[line * img->width + i] == 0; i++) {
@@ -131,6 +133,18 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines) {
     }
     return imgs;
 }
+
+/* BLOCKS DETECTION PART */
+
+size_t block_thresold(struct matrix *img) {
+  int i = 0;
+  for(; line_is_empty(img, i); i++){}
+  int j = i;
+  for(; !line_is_empty(img, j); j++){}
+  return (size_t)(j - i);
+}
+
+/* RESIZE CHAR PART */
 
 struct vector *resize_char(struct matrix *img, struct vector *chars) {
     for (size_t i = 0; i < chars->size; i++) {
