@@ -100,6 +100,8 @@ struct vector *img_to_lines(struct matrix *img) {
     return lines;
 }
 
+
+/* CHAR DETECTION PART */
 struct vector *lines_to_char(struct matrix *img, struct vector *lines) {
     struct vector *imgs = vector_make((img->height) * (img->width));
     for (size_t k = 0; k < lines->size; k++) {

@@ -31,25 +31,37 @@ void filter_blackwhite(SDL_Surface *img) {
     }
 }
 
-// Noise
-void filter_noise_pxl(struct matrix *img, int w, int h) {
-  w -= 1;
-  h -= 1;
-  int  wm = w + 3, hm = h + 3, i = 0;
-  for(; w < wm; w++) {
-    for(; h < hm; h++) {
-      if(img->data[w * img->width + h] == 1) // Choose w and h CAREFULLY
-        i++;
-    }
-  }
-  img->data[(w - 1) * img->width + (h - 1)] = i >= 4 ? 1 : 0;
+int cluster_rec(struct matrix *img, int w, int h, struct matrix *traced, int *nb)
+{
+    struct vector matrix *P = malloc(sizeof(struct matrix));
+    P->data = calloc(sizeof(double) * img->width * img->height);
+    for(int)
 }
 
-void filter_noise(struct matrix *img) {
-  for(int i = 1; i < img->width - 1; i++) {
-    for(int j = 1; j < img->height - 1; j++) {
-      filter_noise_pxl(img, i, j);
+int cluster(struct matrix *img, int w, int h int min)
+{
+    struct matrix *traced = malloc(sizeof(struct matrix));
+    traced->data = calloc(sizeof(double) * w * h);
+    for(int h = 0; h < img->height; h++)
+    {
+	for(int w = 0; w < img->width; w++)
+	{
+	    if(img[h * img->width + w] && !traced[h * img->width + w]) //black pixel not treated yet
+	    {
+		int nb = 0;
+		struct tuple *stain = malloc(sizeof(struct tuple));
+		stain->next == NULL;
+		cluster_rec(img, w, h, traced, &nb,);
+		if(nb < min) //we whiten the stain if it is too small to be a char
+		{
+		    for(; tuple->next != NULL; tuple = tuple->next)
+		    {
+			img[stain->next->height * img->width + stain->next->width] = 0;
+		    }
+		    
+		}
+	    }
+	}
     }
-  }
 }
 
