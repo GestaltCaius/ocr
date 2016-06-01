@@ -146,6 +146,17 @@ size_t block_thresold(struct matrix *img) {
   return (size_t)(j - i);
 }
 
+//secondary functions used in img_to_blocks() and blocks_detection :
+int vectical_search(struct matrix *img, struct coords block, int minimal_size)
+{
+}
+
+int horizontal_search(struct matrix *img, struct coords block, int minimal_size)
+{
+}
+
+
+//the main functions :
 struct vector *img_to_blocks(struct matrix *img)
 {
     struct coords init;
@@ -171,14 +182,14 @@ struct vector *img_to_blocks(struct matrix *img)
 
 struct vector *blocks_detection(struct matrix *img, struct coords *init)
 {
-    int minimum_size = 30;
-    struct vector *processing_vect = vector_make(1);
+    int minimal_size = 30;
+    struct vector *processing_vector = vector_make(1);
     struct vector *blocks = vector_make(0);
     
     //the first block in the processing vector contains all the text :
-    vector_push_front(processing_vect, *init);
+    vector_push_front(processing_vector, *init);
     
-    for(; processing_vect->size != 0;)
+    for(; processing_vector->size != 0;)
     {
 	//tells us if the vertical / horizontal split is a success.
 	int vertical = 1;
@@ -189,8 +200,43 @@ struct vector *blocks_detection(struct matrix *img, struct coords *init)
 	//now we split horizontally the first block of the processing vector.
 	//if we cannot split vertically nor horizontally, we put the block in the output vect.
 	//we stop when the processing vector is empty.
+
+	struct coords current_block;
+	if(vector_pop_front(processing_vector, &current_block))
+	{
+	    int breach = vertical_search(img, current_block, minimal_size);
+	    if(breach)
+	    {
+		struct coords new_block_1 = current_block;
+		new_block_1.h2 = breach;
+		vector_push_back(processing_vector, new_block_1);
+		
+		struct coords new_block_2 = current_block;
+		new_block_2.h1 = breach;
+		vector_push_back(processing_vector, new_block_2);
+	    }
+	    else
+		vertical = 0;
+	    breach = horizontal_search(processing_vector, current_block, minimal_size);
+	    if(breach)
+	    {
+		struct coords new_block_1 = current_block;
+		new_block_1.w2 = breach;
+		vector_push_back(processing_vector, new_block_1);
+
+		struct coords new_block_2 = current_block;
+		new_block_2.w1 = breach;
+		vector_push_back(processing_vector, new_block_2);
+	    }
+	    else
+		horizontal = 0;
+
+            if(vertical == 0 && horizontal == 0)
+		vector_push_back(blocks, current_block);
+	}
+
     }
-    free_vector(processing_vect);
+    free_vector(processing_vector);
     return blocks;
 }
 
