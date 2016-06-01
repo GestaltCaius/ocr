@@ -29,6 +29,8 @@ void draw_square(SDL_Surface *img, struct coords square);
 
 void display_segmentation(SDL_Surface *img, struct vector *V);
 
+struct vector *blocks_detection(struct matrix *img, struct coords *init);
+
 /*
  *
  * struct coords { // coordinates of a pixel in the image (similar to a

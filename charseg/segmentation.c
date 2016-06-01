@@ -148,35 +148,37 @@ size_t block_thresold(struct matrix *img) {
 
 struct vector *img_to_blocks(struct matrix *img)
 {
-    int minimum_size = 30;
     struct coords init;
     
     //all the text is within the square ((w1,h1),(w2,h2))
     int i = 0;
     for(; i < img->height - 1 && line_is_empty(img, i); i++){}
-    init->h1 = i;
+    init.h1 = i;
     for(i = img->height - 1; i > 0 && line_is_empty(img, i); i--){}
-    init->h2 = i;
-    for(i = 0; i < img->width - 1 && column_is_empty(img, i); i++){}
-    init->w1 = i;
-    for(i = img->width - 1; i > 0 && column_is_empty(img, i); i--){}
-    init->w2 = i;
+    init.h2 = i;
+    for(i = 0; i < img->width - 1 && column_is_empty(img, i, init.h1, init.h2); i++){}
+    init.w1 = i;
+    for(i = img->width - 1; i > 0 && column_is_empty(img, i, init.h1, init.h2); i--){}
+    init.w2 = i;
 
     //we launch the block detection in that original block
-    if(init->w1 < init->w2 && init->h1 < init->h2){
-    	return block_detection(img, init);
+    if(init.w1 < init.w2 && init.h1 < init.h2){
+    	return blocks_detection(img, &init);
     }
+    else
+	return NULL; //invalid image.
 }
 
-struct vector *block_detection(struct matrix *img, struct coords *init)
+struct vector *blocks_detection(struct matrix *img, struct coords *init)
 {
+    int minimum_size = 30;
     struct vector *processing_vect = vector_make(1);
     struct vector *blocks = vector_make(0);
     
     //the first block in the processing vector contains all the text :
-    vector_push_front(processing_vect, init);
+    vector_push_front(processing_vect, *init);
     
-    for(; processing_vect->size != 0)
+    for(; processing_vect->size != 0;)
     {
 	//tells us if the vertical / horizontal split is a success.
 	int vertical = 1;
