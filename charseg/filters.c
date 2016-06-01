@@ -30,8 +30,8 @@ void filter_blackwhite(SDL_Surface *img) {
         }
     }
 }
-
-int cluster_rec(struct matrix *img, int w, int h, struct matrix *traced, int *nb)
+/*
+int cluster_rec(struct matrix *img, int w, int h,struct vector *traced,int *nb)
 {
     struct vector matrix *P = malloc(sizeof(struct matrix));
     P->data = calloc(sizeof(double) * img->width * img->height);
@@ -65,3 +65,7 @@ int cluster(struct matrix *img, int w, int h int min)
     }
 }
 
+int stain_size(struct matrix *img, int w, int h)
+{
+
+}*/

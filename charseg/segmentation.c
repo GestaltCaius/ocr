@@ -146,6 +146,52 @@ size_t block_thresold(struct matrix *img) {
   return (size_t)(j - i);
 }
 
+struct vector *img_to_blocks(struct matrix *img)
+{
+    int minimum_size = 30;
+    struct coords init;
+    
+    //all the text is within the square ((w1,h1),(w2,h2))
+    int i = 0;
+    for(; i < img->height - 1 && line_is_empty(img, i); i++){}
+    init->h1 = i;
+    for(i = img->height - 1; i > 0 && line_is_empty(img, i); i--){}
+    init->h2 = i;
+    for(i = 0; i < img->width - 1 && column_is_empty(img, i); i++){}
+    init->w1 = i;
+    for(i = img->width - 1; i > 0 && column_is_empty(img, i); i--){}
+    init->w2 = i;
+
+    //we launch the block detection in that original block
+    if(init->w1 < init->w2 && init->h1 < init->h2){
+    	return block_detection(img, init);
+    }
+}
+
+struct vector *block_detection(struct matrix *img, struct coords *init)
+{
+    struct vector *processing_vect = vector_make(1);
+    struct vector *blocks = vector_make(0);
+    
+    //the first block in the processing vector contains all the text :
+    vector_push_front(processing_vect, init);
+    
+    for(; processing_vect->size != 0)
+    {
+	//tells us if the vertical / horizontal split is a success.
+	int vertical = 1;
+	int horizontal = 1;
+
+	//we try to split verticaly.
+	//if we succeed, we enqueue the new blocks created. if not, vertical = 0.
+	//now we split horizontally the first block of the processing vector.
+	//if we cannot split vertically nor horizontally, we put the block in the output vect.
+	//we stop when the processing vector is empty.
+    }
+    free_vector(processing_vect);
+    return blocks;
+}
+
 /* RESIZE CHAR PART */
 
 struct vector *resize_char(struct matrix *img, struct vector *chars) {
