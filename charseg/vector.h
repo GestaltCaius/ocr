@@ -15,6 +15,9 @@ struct vector {
     struct coords *data;
 };
 
+
+struct vector *vector_merge(struct vector *v1, struct vector *v2);
+
 /*
  * vector_make(capacity) create an empty vector
  * with initial storage size capacity

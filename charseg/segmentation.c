@@ -138,21 +138,54 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines) {
 
 /* BLOCKS DETECTION PART */
 
-size_t block_thresold(struct matrix *img) {
+/*size_t block_thresold(struct matrix *img) {
   int i = 0;
   for(; line_is_empty(img, i); i++){}
   int j = i;
   for(; !line_is_empty(img, j); j++){}
   return (size_t)(j - i);
-}
+}*/
 
 //secondary functions used in img_to_blocks() and blocks_detection :
-int vectical_search(struct matrix *img, struct coords block, int minimal_size)
+int line_is_empty_2(struct matrix *img, int h, int w1, int w2)
 {
+    int i;
+    for(i = w1; i <= w2 && img->data[h * img->width + i] == 0; i++){ }
+    return i == w2 + 1;
+}
+
+int vertical_search(struct matrix *img, struct coords block, int minimal_size)
+{
+    int size = 0;
+    int i;
+    for(i = block.w1; size < minimal_size && i < block.w2 - minimal_size; i++)
+    {
+	if(column_is_empty(img, i, block.h1, block.h2)){ size++; }
+	else { size = 0; }
+    }
+    if(size >= minimal_size)
+    {
+	for(; column_is_empty(img, i, block.h1, block.h2); size++) { }
+	return i - (size / 2);
+    }
+    return 0;
 }
 
 int horizontal_search(struct matrix *img, struct coords block, int minimal_size)
 {
+    int size = 0;
+    int i;
+    for(i = block.h1; size < minimal_size && i < block.h2 - minimal_size; i++)
+    {
+        if(line_is_empty_2(img, i, block.w1, block.w2)){ size++; }
+        else { size = 0; }
+    }       
+    if(size >= minimal_size)
+    {   
+        for(; line_is_empty_2(img, i, block.w1, block.w2); size++) { }
+        return i - (size / 2);
+    }
+    return 0;
 }
 
 
@@ -174,12 +207,13 @@ struct vector *img_to_blocks(struct matrix *img)
 
     //we launch the block detection in that original block
     if(init.w1 < init.w2 && init.h1 < init.h2){
-    	return blocks_detection(img, &init);
+    	return vertical_rec(img, init);
     }
     else
 	return NULL; //invalid image.
 }
 
+/*
 struct vector *blocks_detection(struct matrix *img, struct coords *init)
 {
     int minimal_size = 30;
@@ -204,7 +238,7 @@ struct vector *blocks_detection(struct matrix *img, struct coords *init)
 	struct coords current_block;
 	if(vector_pop_front(processing_vector, &current_block))
 	{
-	    int breach = vertical_search(img, current_block, minimal_size);
+	    int vertical_breach = vertical_search(img, current_block, minimal_size);
 	    if(breach)
 	    {
 		struct coords new_block_1 = current_block;
@@ -217,7 +251,8 @@ struct vector *blocks_detection(struct matrix *img, struct coords *init)
 	    }
 	    else
 		vertical = 0;
-	    breach = horizontal_search(processing_vector, current_block, minimal_size);
+	    int horizontal_breach = horizontal_search
+	                      (processing_vector, current_block, minimal_size);
 	    if(breach)
 	    {
 		struct coords new_block_1 = current_block;
@@ -231,13 +266,86 @@ struct vector *blocks_detection(struct matrix *img, struct coords *init)
 	    else
 		horizontal = 0;
 
-            if(vertical == 0 && horizontal == 0)
+	    struct coords z1, z2, z3, z4;
+	    z1 = current_block;
+	    z2 = z1, z3 = z1, z4 = z1;
+
+	    if(vertical != 0 && horizontal != 0)
+	    {
+		z1.h2 = horizontal_breach;
+		z1.w2 = vertical_breach;
+		
+		z2.h1 = horizontal_breach;
+		z2.w2 = vertical_breach;
+		
+		z3.h2 = horizontal_breach;
+		z3.w1 = vertical_breach;
+
+		z4.h1 = horizontal_breach;
+		z4.w1 = vertical_breach;
+
+		vector_push_back(processing_vector, z1);
+		vector_push_back(processing_vector, z2);
+                vector_push_back(processing_vector, z3);
+		
+
+	    }
+	    else if(vertical != 0 && horizontal == 0)
+	    {
+		z1.
+	    }
+	    else if(horizontal != 0)
+	    {
+	    }
+	    else
 		vector_push_back(blocks, current_block);
+
+	//////////////////////////////////////////////////
+            
 	}
 
     }
     free_vector(processing_vector);
     return blocks;
+}*/
+
+//int vertical_search(struct matrix *img, struct coords block, int minimal_size)
+
+//int horizontal_search(struct matrix *img, struct coords, block, int minimal_size)
+
+struct vector *vertical_rec(struct matrix *img, struct coords block)
+{
+    int i = vertical_search(img, block, 30);
+    if(i)
+    {
+	struct coords block1, block2;
+	block1 = block, block2 = block;
+	block1.w2 = i;
+	block2.w1 = i;
+	return vector_merge(horizontal_rec(img, block1), vertical_rec(img, block2));
+    }
+    else
+    {
+	return horizontal_rec(img, block);
+    }
+}
+struct vector *horizontal_rec(struct matrix *img, struct coords block)
+{
+    int i = horizontal_search(img, block, 30);
+    if(i)
+    {
+	struct coords block1, block2;
+	block1 = block, block2 = block;
+	block1.h2 = i;
+	block2.h1 = i;
+	return vector_merge(vertical_rec(img, block1), vertical_rec(img, block2));
+    }
+    else
+    {
+	struct vector *indivisible_block = vector_make(1);
+	indivisible_block->data[0] = block;
+	return indivisible_block;
+    }
 }
 
 /* RESIZE CHAR PART */

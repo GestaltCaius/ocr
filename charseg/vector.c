@@ -3,6 +3,26 @@
 #include <string.h>
 #include "vector.h"
 
+struct vector *vector_merge(struct vector *v1, struct vector *v2)
+{
+    if(v1 == NULL || v1->size == 0)
+	return v2;
+    else if(v2 == NULL || v2->size == 0)
+	return v1;
+    else
+    {
+	for(; v2->size != 0;)
+	{
+	    struct coords elt;
+	    if(vector_pop_front(v2, &elt)){
+		vector_push_back(v1, elt);
+	    }
+	}
+	free(v2);
+	return v1;
+    }
+}
+
 struct vector *vector_make(size_t cap) {
     struct vector *v = malloc(sizeof(struct vector));
     v->capacity = cap;
