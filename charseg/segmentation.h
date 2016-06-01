@@ -1,3 +1,5 @@
+#ifndef SEGMENTATION_H
+#define SEGMENTATION_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>
@@ -132,3 +134,6 @@ struct list_coords* segmentation_final_output(SDL_SURFACE *img, struct
 list_coords *lines);
 
 */
+#endif
+
+
