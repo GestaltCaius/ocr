@@ -42,7 +42,8 @@ struct network tr_and_init_network() {
 }
 
 struct vector *create_vector(struct matrix *A) {
-    struct vector *V = img_to_lines(A);
+    struct vector *B = img_to_blocks(A);
+    struct vector *V = img_to_lines(A, B);
     struct vector *F = lines_to_char(A, V);
     F = resize_char(A, F);
     free_vector(V);

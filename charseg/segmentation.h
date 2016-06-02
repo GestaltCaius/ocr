@@ -19,7 +19,7 @@ struct matrix *img_to_matrix(SDL_Surface *img);
 
 void free_matrix(struct matrix *A);
 
-struct vector *img_to_lines(struct matrix *img);
+struct vector *img_to_lines(struct matrix *img, struct vector *blocks);
 
 struct vector *lines_to_char(struct matrix *img, struct vector *lines);
 
@@ -39,7 +39,7 @@ struct vector *horizontal_rec(struct matrix *img, struct coords block);
 
 struct vector *img_to_blocks(struct matrix *img);
 
-
+int line_is_empty(struct matrix *img, int h, int w1, int w2);
 
 
 /*
