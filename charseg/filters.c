@@ -80,6 +80,31 @@ void convolution_apply(struct matrix *M, int w, int h, struct matrix *conv)
   M->data[w * M->width + h] = sum / 9;
 }
 
+
+// Contrast filter
+
+void filter_contrast(struct matrix *M)
+{
+  // Create convolution matrix
+  struct matrix *conv = malloc(sizeof(struct matrix));
+  conv->width = conv->height = 3;
+  conv->data = malloc(9 * sizeof(double));
+  for(int i = 0; i < 9; ++i)
+  {
+    if (i % 2)
+      conv->data[i] = -1;
+    else
+      conv->data[i] = i == 4 ? 5 : 0;
+  }
+  // Apply filter
+  for(int i = 1; i < M->width - 1; ++i)
+  {
+    for(int j = 1; j < M->height - 1; ++j)
+    {
+      convolution_apply(M, i, j, conv);
+    }
+  }
+}
 /* 
  *
  * LOUP'S BS
