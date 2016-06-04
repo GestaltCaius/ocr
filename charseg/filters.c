@@ -15,23 +15,6 @@ void filter_greyscale(SDL_Surface *img) {
     }
 }
 
-struct matrix *filter_greyscale_matrix(SDL_Surface *img) {
-    Uint32 pxl;
-    Uint8 r, g, b;
-    struct matrix *M = malloc(sizeof(struct matrix));
-    M->data = malloc(img->w * img->h * sizeof(double));
-    M->width = img->w;
-    M->height = img->h;
-    for (int w = 0; w < img->w; w++) {
-        for (int h = 0; h < img->h; h++) {
-            pxl = getpixel(img, w, h);
-            SDL_GetRGB(pxl, img->format, &r, &g, &b);
-            r = 0.3 * r + 0.59 * g + 0.11 * b;
-            M->data[w * M->width + h] = (double)r;
-        }
-    }
-    return M;
-}
 
 // Black and White
 void filter_blackwhite(SDL_Surface *img) {
@@ -105,10 +88,55 @@ void filter_contrast(struct matrix *M)
     }
   }
 }
+
+// Matrix operations
+struct matrix *filter_greyscale_matrix(SDL_Surface *img) {
+    Uint32 pxl;
+    Uint8 r, g, b;
+    struct matrix *M = malloc(sizeof(struct matrix));
+    M->data = malloc(img->w * img->h * sizeof(double));
+    M->width = img->w;
+    M->height = img->h;
+    for (int w = 0; w < img->w; w++) {
+        for (int h = 0; h < img->h; h++) {
+            pxl = getpixel(img, w, h);
+            SDL_GetRGB(pxl, img->format, &r, &g, &b);
+            r = 0.3 * r + 0.59 * g + 0.11 * b;
+            M->data[w * M->width + h] = (double)r;
+        }
+    }
+    return M;
+}
+
+/* we use the img gave in filter_greyscale_matrix
+ * that way, its elements are already filled (format, height, width) */
+void matrix_to_img(struct matrix *M, SDL_Surface *img)
+{
+  Uint32 pxl;
+  Uint8 rgb;
+  for (int w = 0; w < img->w; w++)
+  {
+    for (int h = 0; h < img->h; h++)
+    {
+      rgb = (Uint8)M->data[w * M->width + h];
+      pxl = SDL_MapRGB(img->format, rgb, rgb, rgb);
+      putpixel(img, w, h, pxl);
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
 /* 
- *
+ * ________________________________________________________
  * LOUP'S BS
- *
+ * ________________________________________________________
  */
 
 /*
