@@ -38,10 +38,12 @@ void filter_noise(struct matrix *M)
 {
   // Create conv matrix
   struct matrix *conv = malloc(sizeof(struct matrix));
-  conv->data = malloc(9 * sizeof(double));
   conv->width = conv->height = 3;
-  for(size_t i = 0; i < 9; i++)
-  conv->data[i] = i == 4 ? 5 : 1; // all 1's, except for the 5 in the center
+  conv->data = malloc(conv->width *conv->height * sizeof(double));
+  for(size_t i = 0; i < conv->width; i++)
+      for(int j = 0; j<conv->height; j++)
+          conv->data[i * conv->height + j] = (i == (conv->width/2) && j == (conv->height/2))
+              ? 5 : 1; // all 1's, except for the 5 in the center
   // Let's apply the conv matrix
   for(int i = 1; i < M->width - 1; i++)
   {
@@ -58,9 +60,10 @@ void convolution_apply(struct matrix *M, int w, int h, struct matrix *conv)
   for(int i = 0; w - 1 + i <= w + 1; i++)
   {
     for(int j = 0; h - 1 + j < h + 1; j++)
-      sum += M->data[ (w-1+i) * M->width + (h-1+j)] * conv->data[i * 3 + j];
+      sum += M->data[ (w-1+i) 
+          + M->width * (h-1+j)] * conv->data[i * 3 + j];
   }
-  M->data[w * M->width + h] = sum / 9;
+  M->data[w + M->width * h] = sum / 9;
 }
 
 
@@ -75,7 +78,7 @@ void filter_contrast(struct matrix *M)
   for(int i = 0; i < 9; ++i)
   {
     if (i % 2)
-      conv->data[i] = -1;
+      conv->data[i] = 1;
     else
       conv->data[i] = i == 4 ? 5 : 0;
   }
@@ -102,7 +105,7 @@ struct matrix *filter_greyscale_matrix(SDL_Surface *img) {
             pxl = getpixel(img, w, h);
             SDL_GetRGB(pxl, img->format, &r, &g, &b);
             r = 0.3 * r + 0.59 * g + 0.11 * b;
-            M->data[w * M->width + h] = (double)r;
+            M->data[w + img->w *  h] = (double)r;
         }
     }
     return M;
@@ -118,63 +121,10 @@ void matrix_to_img(struct matrix *M, SDL_Surface *img)
   {
     for (int h = 0; h < img->h; h++)
     {
-      rgb = (Uint8)M->data[w * M->width + h];
+      rgb = (Uint8)M->data[w + M->width * h];
       pxl = SDL_MapRGB(img->format, rgb, rgb, rgb);
       putpixel(img, w, h, pxl);
     }
   }
 }
 
-
-
-
-
-
-
-
-
-/* 
- * ________________________________________________________
- * LOUP'S BS
- * ________________________________________________________
- */
-
-/*
-int cluster_rec(struct matrix *img, int w, int h,struct vector *traced,int *nb)
-{
-    struct vector matrix *P = malloc(sizeof(struct matrix));
-    P->data = calloc(sizeof(double) * img->width * img->height);
-    for(int)
-}
-
-int cluster(struct matrix *img, int w, int h int min)
-{
-    struct matrix *traced = malloc(sizeof(struct matrix));
-    traced->data = calloc(sizeof(double) * w * h);
-    for(int h = 0; h < img->height; h++)
-    {
-	for(int w = 0; w < img->width; w++)
-	{
-	    if(img[h * img->width + w] && !traced[h * img->width + w]) //black pixel not treated yet
-	    {
-		int nb = 0;
-		struct tuple *stain = malloc(sizeof(struct tuple));
-		stain->next == NULL;
-		cluster_rec(img, w, h, traced, &nb,);
-		if(nb < min) //we whiten the stain if it is too small to be a char
-		{
-		    for(; tuple->next != NULL; tuple = tuple->next)
-		    {
-			img[stain->next->height * img->width + stain->next->width] = 0;
-		    }
-		    
-		}
-	    }
-	}
-    }
-}
-
-int stain_size(struct matrix *img, int w, int h)
-{
-
-}*/
