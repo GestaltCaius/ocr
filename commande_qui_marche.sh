@@ -7,7 +7,7 @@ directory=$base/training/directory
 rm -rf $base/training
 mkdir $base/training
 
-for pol in $(fc-list | cut -d':' -f1)
+for pol in $(fc-list | cut -d':' -f1 | grep -v .gz)
 do
     sem -j+16
     ( dir=$(echo $pol|rev|cut -f'1' -d'/'|rev)
