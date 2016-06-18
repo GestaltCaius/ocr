@@ -41,13 +41,13 @@ void filter_noise(struct matrix *M)
   conv->width = conv->height = 3;
   conv->data = malloc(conv->width *conv->height * sizeof(double));
   for(size_t i = 0; i < conv->width; i++)
-      for(int j = 0; j<conv->height; j++)
+      for(size_t j = 0; j<conv->height; j++)
           conv->data[i * conv->height + j] = (i == (conv->width/2) && j == (conv->height/2))
               ? 5 : 1; // all 1's, except for the 5 in the center
   // Let's apply the conv matrix
-  for(int i = 1; i < M->width - 1; i++)
+  for(size_t i = 1; i < M->width - 1; i++)
   {
-    for(int j = 1; j < M->height - 1; j++)
+    for(size_t j = 1; j < M->height - 1; j++)
       convolution_apply(M, i, j, conv);
   }
 }
@@ -83,9 +83,9 @@ void filter_contrast(struct matrix *M)
       conv->data[i] = i == 4 ? 5 : 0;
   }
   // Apply filter
-  for(int i = 1; i < M->width - 1; ++i)
+  for(size_t i = 1; i < M->width - 1; ++i)
   {
-    for(int j = 1; j < M->height - 1; ++j)
+    for(size_t j = 1; j < M->height - 1; ++j)
     {
       convolution_apply(M, i, j, conv);
     }
