@@ -10,7 +10,7 @@
 
 struct matrix {
     double *data;
-    int width, height;
+    size_t width, height;
 };
 
 void test_charseg(SDL_Surface *originalimg, struct vector *v);

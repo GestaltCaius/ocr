@@ -79,7 +79,7 @@ int small_line_is_empty(struct matrix *img, int y, int w1, int w2) {
 struct vector *img_to_lines(struct matrix *img, struct vector *blocks) {
     struct vector *lines = vector_make((img->height) * (img->width));
     int status = 0; // not on a line
-    int h = 0;
+    size_t h = 0;
     for(; blocks->size != 0;)
     {
 	struct coords current_block;
@@ -120,7 +120,7 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines) {
 	actual_coords.h2 = lines->data[k].h2;
 	int recording = 0;
 
-	for (int i = 0; i < img->width; i++) {
+	for (size_t i = 0; i < img->width; i++) {
 	    if (!recording) {
 		if (!column_is_empty(img, i, lines->data[k].h1,
 			    lines->data[k].h2)) {
@@ -203,7 +203,7 @@ struct vector *img_to_blocks(struct matrix *img)
     struct coords init;
 
     //all the text is within the square ((w1,h1),(w2,h2))
-    int i = 0;
+    size_t i = 0;
     for(; i < img->height - 1 && line_is_empty(img, i, 0, img->width - 1); i++){}
     init.h1 = i;
     for(i = img->height - 1; i > 0 && line_is_empty(img, i, 0, img->width - 1); i--){}
