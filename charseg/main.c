@@ -43,7 +43,9 @@ struct network tr_and_init_network() {
 
 struct vector *create_vector(struct matrix *A) {
     struct vector *B = img_to_blocks(A);
+    printf("\n      Number of blocks : %d \n", (int)B->size);
     struct vector *V = img_to_lines(A, B);
+    printf("\n      Number of lines : %d \n\n", (int)V->size);
     struct vector *F = lines_to_char(A, V);
     F = resize_char(A, F);
     free_vector(V);
@@ -124,4 +126,4 @@ int main(int argc, char *argv[]) {
         printf("Missing path");
     }
     return 0;
-}
+} 
