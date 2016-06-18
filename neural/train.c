@@ -5,18 +5,16 @@ struct try
         
         char *path_tmp, *i_char;
         ssize_t read;
+        size_t *n;
+        read = getline(&path_tmp,&n,fp);
 
-
-        size_t nb_line = 0;
+        size_t nb_line = atoi(path_tmp);
         size_t nb_char = 26 * 2 + 10;
         struct try
             *trys = calloc(nb_line * nb_char, sizeof(struct try));
         init_sdl();
-        size_t *n;
         for(size_t i = 0; i < nb_line; i++)
         {
-            char *path_tmp, *i_char;
-            ssize_t read;
             read = getline(&path_tmp,&n,fp);
             for(size_t j = 0; j < nb_char; j++)
             {
