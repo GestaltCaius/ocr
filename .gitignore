@@ -38,6 +38,7 @@
 
 # Vim files
 *.swp
+*.swo
 
 #Dependency files
 *.d
