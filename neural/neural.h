@@ -17,4 +17,10 @@ struct network {
     struct neuron **n; // tableau de neurone (L[i] * nl);
 };
 
+struct try {
+        double *in; // essai entrée
+        double *res; // essai resultat attendu
+};
+
+
 #endif
