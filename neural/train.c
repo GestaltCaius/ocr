@@ -16,13 +16,13 @@ struct try
     *init_try_folder(char *path) {
         FILE *fp = fopen(path, "r");
         
-        char *path_tmp, *i_char;
+        char *path_tmp, *i_char = "";
         ssize_t read;
-        size_t *n;
+        size_t n;
         read = getline(&path_tmp,&n,fp);
 
         size_t nb_line = atoi(path_tmp);
-        printf("%d", nb_line);
+        printf("%zu", nb_line);
         size_t nb_char = 26 * 2 + 10;
         struct try
             *trys = calloc(nb_line * nb_char, sizeof(struct try));
@@ -34,12 +34,12 @@ struct try
             {
                 for(size_t j = 0; j < nb_char; j++)
                 {
-                    sprintf(i_char, "%d", i);
+                    sprintf(i_char, "%zu", i);
                     strcat(path_tmp, i_char);
                     strcat(path_tmp, ".png");
 
-                    SDL_Surface *img = load_image(str);
-                    trys[i].in = calloc(img->w * img->h, sizeof(double));
+                    SDL_Surface *img = load_image(path_tmp);
+                    trys[i*nb_line + j].in = calloc(img->w * img->h, sizeof(double));
                     for(int k = 0; k < img->w; k++)
                     {
                         for(int l = 0; l < img->h; l++)
@@ -54,7 +54,10 @@ struct try
                                 trys[i*nb_line + j].in[k * (img->w) + l] = 0;
                         }
                     }
+                    trys[i*nb_line+j].res[j] = 1;
                 }
             }
         }
+    return trys;
     }
+
