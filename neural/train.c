@@ -1,3 +1,16 @@
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <time.h>
+#include <SDL.h>
+#include "pixel_operations.h"
+#include "loadimage.h"
+
+#include "neural.h"
+#include "weight_file.h"
+
 
 struct try
     *init_try_folder(char *path) {
