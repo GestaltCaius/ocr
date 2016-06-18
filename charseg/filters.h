@@ -15,3 +15,10 @@ void filter_blackwhite(SDL_Surface *img);
 void convolution_apply(struct matrix *M, int w, int h, struct matrix *conv);
 
 void filter_noise(struct matrix *M);
+
+void filter_contrast(struct matrix *M);
+// img to/from matrix
+
+struct matrix *filter_greyscale_matrix(SDL_Surface *img);
+
+void matrix_to_img(struct matrix *M, SDL_Surface *img);

@@ -77,6 +77,22 @@ void small_ocr(struct network *net, char *fname, struct matrix *A,
 }
 
 int main(int argc, char *argv[]) {
+    // Test de contraste, gommage etc.
+    if (argc == 3 && *argv[1] == 'r')
+    {
+        init_sdl();
+        SDL_Surface *img = load_image(argv[2]);
+        struct matrix *M = filter_greyscale_matrix(img);
+        filter_noise(M);
+        matrix_to_img(M, img);
+        display_image(img);
+        filter_contrast(M);
+        matrix_to_img(M, img);
+        display_image(img);
+        SDL_FreeSurface(img);
+        free_matrix(M);
+        SDL_Quit();
+    }
     if (argc == 2 || argc == 3) {
         init_sdl();
         SDL_Surface *img = load_image(argv[1]);
