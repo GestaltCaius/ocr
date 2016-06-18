@@ -7,6 +7,7 @@
 #include "vector.h"
 #include "loadimage.h"
 #include "segmentation.h"
+#include "filters.h"
 
 struct matrix *img_to_matrix(SDL_Surface *img) {
     Uint32 pxl;

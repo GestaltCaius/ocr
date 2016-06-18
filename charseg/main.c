@@ -44,7 +44,12 @@ struct network tr_and_init_network() {
 struct vector *create_vector(struct matrix *A) {
     struct vector *B = img_to_blocks(A);
     printf("\n      Number of blocks : %d \n", (int)B->size);
-    struct vector *V = img_to_lines(A, B);
+    //struct vector *Test = vector_make(1);
+    //struct coords full_img;
+    //full_img.w1 = 1, full_img.h1 = 1;
+    //full_img.w2 = A->width - 1, full_img.h2 = A->height - 1;
+    //vector_push_front(Test, full_img);
+    struct vector *V = img_to_lines(A, B/*Test*/);
     printf("\n      Number of lines : %d \n\n", (int)V->size);
     struct vector *F = lines_to_char(A, V);
     F = resize_char(A, F);
@@ -86,7 +91,6 @@ int main(int argc, char *argv[]) {
         SDL_Surface *img = load_image(argv[2]);
         struct matrix *M = filter_greyscale_matrix(img);
         filter_noise(M);
-        matrix_to_img(M, img);
         display_image(img);
         filter_contrast(M);
         matrix_to_img(M, img);
@@ -95,6 +99,26 @@ int main(int argc, char *argv[]) {
         free_matrix(M);
         SDL_Quit();
     }
+
+
+    if(argc == 3 && *argv[1] == 'l')
+    {
+        init_sdl();
+        SDL_Surface *img = load_image(argv[2]);
+        struct matrix *M = filter_greyscale_matrix(img);
+        display_image(img);
+for(int i = 0; i <= 1; i++)
+        {
+            filter_noise(M);
+            M = check_neighbourhood(M);
+            matrix_to_img(M, img);
+        }
+        display_image(img);
+        SDL_FreeSurface(img);
+        SDL_Quit();
+    }
+
+
     if (argc == 2 || argc == 3) {
         init_sdl();
         SDL_Surface *img = load_image(argv[1]);

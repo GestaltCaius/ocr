@@ -105,7 +105,7 @@ struct matrix *filter_greyscale_matrix(SDL_Surface *img) {
             pxl = getpixel(img, w, h);
             SDL_GetRGB(pxl, img->format, &r, &g, &b);
             r = 0.3 * r + 0.59 * g + 0.11 * b;
-            M->data[w + img->w *  h] = (double)r;
+            M->data[w + img->w *  h] = (double)r; 
         }
     }
     return M;
@@ -126,5 +126,45 @@ void matrix_to_img(struct matrix *M, SDL_Surface *img)
       putpixel(img, w, h, pxl);
     }
   }
+}
+
+struct matrix *check_neighbourhood(struct matrix *M)
+{
+    int size = M->width * M->height;
+    struct matrix *new = malloc(sizeof(struct matrix) * size);
+    new->data = malloc(sizeof(double) * size);
+    new->width = M->width;
+    new->height = M->height;
+    for(size_t h = 2; h <= M->height - 2; h++)
+    {
+        for(size_t w = 2; w < M->height - 2; w++)
+        {
+            unsigned int nb_black = 0;
+            if(M->data[h * M->width + w] == 1)
+                nb_black++;
+            if(M->data[h * M->width + w - 1] == 1)
+                nb_black++;
+            if(M->data[h * M->width + w + 1] == 1)
+                nb_black++;
+            if(M->data[h * (M->width - 1) + w] == 1)
+                nb_black++;
+            if(M->data[h * (M->width - 1) + w - 1] == 1)
+                nb_black++;
+            if(M->data[h * (M->width - 1) + w + 1] == 1)
+                nb_black++;
+            if(M->data[h * (M->width + 1) + w] == 1)
+                nb_black++;
+            if(M->data[h * (M->width + 1) + w - 1] == 1)
+                nb_black++;
+            if(M->data[h * (M->width + 1) + w + 1] == 1)
+                nb_black++;
+            if(nb_black > 0)
+               new ->data[h * M->width + w] = 1;
+            else
+                new->data[h * M->width + w] = 0;
+        }
+    }
+    free_matrix(M);
+    return new;
 }
 
