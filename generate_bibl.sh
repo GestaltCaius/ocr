@@ -41,4 +41,5 @@ for d in *;do i=9; for c in {A..Z}; do let i=i+1; mv $d/$c.png $d/$i.png; done; 
 
 for d in *;do i=35; for c in {a..z}; do let i=i+1; mv $d/$c.png $d/$i.png; done; done
 
-
+ls | wc -l > files.txt
+ls -rt -d -1 $PWD/{*,.*} >> files.txt
