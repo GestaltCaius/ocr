@@ -57,6 +57,7 @@ struct network *load_network_from_file(char *filename) {
         for (size_t n = 0; n < net->L[l]; n++) {
             net->n[l][n].nw = net->L[l - 1];
             net->n[l][n].w = calloc(net->n[l][n].nw, sizeof(double));
+            net->n[l][n].lw = calloc(net->n[l][n].nw, sizeof(double));
             for (size_t w = 0; w < net->n[l][n].nw; w++)
                 fscanf(f, "%la ", &net->n[l][n].w[w]);
             fscanf(f, "%la\n", &net->n[l][n].b);
@@ -67,6 +68,7 @@ struct network *load_network_from_file(char *filename) {
     for (size_t n = 0; n < net->L[0]; n++) {
         net->n[0][n].nw = 0;
         net->n[0][n].w = NULL;
+        net->n[0][n].lw = NULL;
         net->n[0][n].b = 0;
     }
 
