@@ -61,6 +61,14 @@ void filter_flou(struct matrix *M)
     free(C);
 }
 
+void filter_repoussage(struct matrix *M)
+{
+    double *C = malloc(sizeof(double) * 9);
+    C[0] = -2, C[1] = C[3] = -1, C[4] = C[5] = C[7] = 1, C[6] = C[2] = 0, C[8] = 2;
+    convolution_apply(M, C);
+    free(C);
+}
+
 void convolution_apply(struct matrix *M, double *C)
 {
     int coef = 0; //the summ of the coefficients in the convolution matrix.
@@ -77,11 +85,11 @@ void convolution_apply(struct matrix *M, double *C)
     {
         Out[i * M->height] = 255;
         Out[i * M->height + M->width -1] = 255;
-    }
+    }*/
     for(size_t i = 0; i < M->width * M->height; i++)
     {
         Out[i] = 255;
-    }*/
+    }
 
     //The main function :
     for(size_t h = 1; h < M->height - 1; h++)
@@ -102,33 +110,35 @@ void convolution_apply(struct matrix *M, double *C)
             if(summ < 0)
                 summ = 0;
             else
-                summ = 255 - (double)(((int)summ / coef) % 256);
+                summ = (double)((int)(summ / coef) % 256);
             Out[h * M->width + w] = summ;
         }
     }
 
     //We whiten the borders :
-    int margin = (int)M->height / 10;
-    printf("\nVertical margin : %d \n", margin);
-    for(size_t i = 0; i < M->width; i++)
+    /*
+    size_t margin = (int)M->height / 20;
+    printf("\nVertical margin : %d \n", (int)margin);
+    for(size_t i = 0; i < margin; i++)
     {
-        for(; margin >= 0; margin--)
+        for(size_t j = 0; j < M->width; j++)
         {
-            Out[margin * M->width + i] = 0;
-            Out[(M->height - margin ) * M->width + i] = 0;
-        }
-    }
-    margin = (int)M->width / 10;
-    printf("\nHorizontal margin : %d \n", margin);
-    for(size_t i = 0; i < M->height - 1; i++)
-    {
-        for(; margin >= 0; margin--)
-        {
-            Out[i * M->width + margin]= 0;
-            Out[i * M->width + M->width - margin - 1] = 0;
+            Out[i * M->width + j] = 255;
+            Out[(M->height - i - 1) * M->width + j] = 255;
         }
     }
 
+    margin = (int)M->width / 20;
+    printf("\nHorizontal margin : %d \n", (int)margin);
+    for(size_t i = 0; i < M->height; i++)
+    {
+        for(size_t j = 0; j < margin; j++)
+        {
+            Out[i * M->width + j] = 255;
+            Out[i * M->width + M->width - j - 1] = 255;
+        }
+    }
+    */
     free(M->data);
     M->data = Out;
 }
