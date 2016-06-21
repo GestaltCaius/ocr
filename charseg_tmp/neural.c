@@ -4,7 +4,7 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include "pixel_operations.h"
 #include "loadimage.h"
 
@@ -395,77 +395,4 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite,
             printf("\n\n");
         }
     }
-}
-
-int main(int argc, char *argv[]) {
-
-    if (argc != 2) {
-        printf("error args");
-        return 0;
-    }
-
-    srand(time(NULL));
-
-    if (argv[1][0] == '1') // xor
-    {
-        size_t L[] = {2, 4, 1};
-        struct network net = init_network(L, 3);
-        struct try
-            *tr = init_try_xor();
-        train(&net, tr, 4, 20000, 5000);
-        free_trys(tr, 4);
-        save_network_to_file(&net, "xor_weights.txt");
-        free_network_neurons(&net);
-        return 0;
-    }
-
-    if (argv[1][0] == '2') // 3 input 2 out ex
-    {
-        size_t L[] = {3, 7, 2};
-        struct network net = init_network(L, 3);
-        struct try
-            *tr = init_try_3_2();
-        train(&net, tr, 8, 20000, 5000);
-        free_trys(tr, 8);
-        free_network_neurons(&net);
-        return 0;
-    }
-
-    if (argv[1][0] == '3') {
-        size_t L[] = {16 * 16, 10, 10};
-        struct network net = init_network(L, 3);
-        struct try
-            *tr = init_numbers_0_to_9("./nbs/");
-        train(&net, tr, 10, 20000, 5000);
-        free_trys(tr, 10);
-        free_network_neurons(&net);
-        return 0;
-    }
-
-    if (argv[1][0] == '4') {
-        struct network *net = load_network_from_file("xor_weights.txt");
-        struct try
-            *tr = init_try_xor();
-        train(net, tr, 4, 1, 1);
-        free_network_neurons(net);
-        free_trys(tr, 4);
-        free(net->L);
-        free(net);
-        return 0;
-    }
-
-    if(argv[1][0] == '5') {
-        struct try* tr = init_try_folder("/home/epita/projet_ocr/ocr-bibl/training/files.txt");
-        size_t L[] = {16*16,5000,62};
-        struct network net = init_network(L, 3);
-        train(&net, tr, /*todo:get this value from file*/ (26*2+10), 50, 10);
-        
-        save_network_to_file(&net, "ocr_weights.txt");
-    }
-
-    printf("error args");
-    printf("end");
-    fflush(stdout);
-
-    return 0;
 }
