@@ -23,7 +23,14 @@ int main(int argc, char *argv[])
   GdkPixbuf *icon;
   GtkWidget *button;
   GtkWidget *table;
-  
+  GtkWidget *halign;
+  GtkWidget *vbox; // to align text area with buttons
+  GtkWidget *view;
+  GtkWidget *scroll;
+
+  GtkTextBuffer *buffer;
+  GtkTextIter iter;
+
   gtk_init(&argc, &argv);
 
   // main window setup
@@ -55,6 +62,19 @@ int main(int argc, char *argv[])
 
   gtk_container_add(GTK_CONTAINER(window), table);
 
+  // text area
+  vbox = gtk_vbox_new(FALSE, 0);
+  view = gtk_text_view_new();
+  gtk_box_pack_start(GTK_BOX(vbox), view, TRUE, TRUE, 0);
+  buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+
+  scroll = gtk_scrolled_window_new(NULL, NULL);
+  gtk_container_add(GTK_CONTAINER(vbox), scroll);
+
+  halign = gtk_alignment_new(0, 1, 0, 0);
+  gtk_container_add(GTK_CONTAINER(table), halign);
+  gtk_container_add(GTK_CONTAINER(halign), vbox);
+  
   // icon setup
   icon = create_pixbuf("icon.png");
   gtk_window_set_icon(GTK_WINDOW(window), icon);
