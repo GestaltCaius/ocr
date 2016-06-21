@@ -14,15 +14,15 @@ do
     mkdir $base/training/$dir
     for letter in {a..z}
     do
-        convert -font $pol  -pointsize 12 label:$letter -trim $base/training/$dir/$letter.png
-    done
-    for letter in {A..Z}
-    do
-        convert -font $pol  -pointsize 12 label:$letter -trim $base/training/$dir/$letter.png
-    done
-    for letter in {0..9}
-    do
-        convert -font $pol  -pointsize 12 label:$letter -trim $base/training/$dir/$letter.png
+        convert -font $pol  -pointsize 12 label:$letter  -trim +repage $base/training/$dir/$letter.png
+    done                                                             
+    for letter in {A..Z}                                             
+    do                                                               
+        convert -font $pol  -pointsize 12 label:$letter  -trim +repage $base/training/$dir/$letter.png
+    done                                                             
+    for letter in {0..9}                                             
+    do                                                               
+        convert -font $pol  -pointsize 12 label:$letter  -trim +repage $base/training/$dir/$letter.png
     done
     )
     #echo $base/training/$dir >>$directory.tmp

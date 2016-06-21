@@ -9,6 +9,7 @@
 #include "loadimage.h"
 
 #include "neural.h"
+#include "train.h"
 #include "weight_file.h"
 
 
@@ -17,6 +18,7 @@ struct neuron init_neuron(size_t nw, int ent) {
     struct neuron new;
     new.nw = nw;
     new.w = calloc(nw, sizeof(size_t));
+    new.lw = calloc(nw, sizeof(size_t));
 
     // set random weight;
     if (ent) {
@@ -35,7 +37,6 @@ struct neuron init_neuron(size_t nw, int ent) {
     // set last vals to 0
     new.lder = 0;
     new.lout = 0;
-    new.lw = NULL;
 
     return new;
 }
@@ -271,6 +272,13 @@ void backpropa(struct network *n, double eta, struct try in) {
     }
 }
 
+static inline void swap_weights(double** a, double** b)
+{
+    double* c = *a;
+    *a = *b;
+    *b = c;
+}
+
 void backpropagation(struct network *n, double k, struct try in)
 {
     //Output layer
@@ -280,13 +288,18 @@ void backpropagation(struct network *n, double k, struct try in)
         n->n[l][i].lder = n->n[l][i].lout - in.res[i];
         //Weight adjustement
 
-        free(n->n[l][i].lw);
+        
+        /*free(n->n[l][i].lw);
         n->n[l][i].lw = malloc(sizeof(double) * n->L[l-1]);
         memcpy(n->n[l][i].lw, n->n[l][i].w, sizeof(double) * n->L[l-1]);
+        */
+
+        swap_weights(&(n->n[l][i].lw), &(n->n[l][i].w));
+        
 
         for(size_t j = 0; j < n->L[l-1]; j++)
         {
-            n->n[l][i].w[j] -= k * n->n[l-1][j].lout * n->n[l][i].lder;
+            n->n[l][i].w[j] =n->n[l][i].lw[j] - k * n->n[l-1][j].lout * n->n[l][i].lder;
         }
         n->n[l][i].b -= k * n->n[l][i].lder;
     }
@@ -295,9 +308,13 @@ void backpropagation(struct network *n, double k, struct try in)
     for(l = n->nL - 2; l > 0; l--)
         for(size_t i = 0; i < n->L[l]; i++)
         {
+            /*
             free(n->n[l][i].lw);
             n->n[l][i].lw = malloc(sizeof(double) * n->L[l-1]);
             memcpy(n->n[l][i].lw, n->n[l][i].w, sizeof(double) * n->L[l-1]);
+            */
+            swap_weights(&(n->n[l][i].lw), &(n->n[l][i].w));
+
 
             n->n[l][i].lder = 0;
             for(size_t j = 0; j < n->L[l+1]; j++)
@@ -307,7 +324,7 @@ void backpropagation(struct network *n, double k, struct try in)
             n->n[l][i].lder *= psigmoid(n->n[l][i].lin);
 
             for(size_t w = 0; w < n->n[l][i].nw; w++)
-                n->n[l][i].w[w] -= k* n->n[l][i].lder
+                n->n[l][i].w[w] = n->n[l][i].lw[w] -  k* n->n[l][i].lder
                     //* n->n[l][i].lout
                     * n->n[l-1][w].lout;
 
@@ -436,6 +453,16 @@ int main(int argc, char *argv[]) {
         free(net);
         return 0;
     }
+
+    if(argv[1][0] == '5') {
+        struct try* tr = init_try_folder("/home/epita/projet_ocr/ocr-bibl/training/files.txt");
+        size_t L[] = {16*16,5000,62};
+        struct network net = init_network(L, 3);
+        train(&net, tr, /*todo:get this value from file*/ 2*(26*2+10), 500, 10);
+        
+        save_network_to_file(&net, "ocr_weights.txt");
+    }
+
     printf("error args");
     printf("end");
     fflush(stdout);
