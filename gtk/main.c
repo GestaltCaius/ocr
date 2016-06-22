@@ -1,4 +1,11 @@
 #include <gtk/gtk.h>
+#include <stdlib.h>
+
+// struct data for g_signal_connect
+struct data_array
+{
+  GtkWidget *window, *view;
+};
 
 // to send error if filename is wrong
 GdkPixbuf *create_pixbuf(const gchar * filename) {
@@ -14,6 +21,56 @@ GdkPixbuf *create_pixbuf(const gchar * filename) {
    }
 
    return pixbuf;
+}
+
+// save buffer to text file
+void save_text(GtkWindow *window, GtkWidget *view)
+{
+ GtkWidget *dialog;
+ dialog = gtk_file_chooser_dialog_new ("Save File",
+     window,
+     GTK_FILE_CHOOSER_ACTION_SAVE,
+     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+     GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+     NULL);
+ gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+ gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "~/Documents/");
+ gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), "result.txt");
+ if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+ {
+   gchar *filename, *text;
+   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW(view));
+   g_object_get(G_OBJECT(buffer), "text", &text, NULL);
+   filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+   g_file_set_contents (filename, text, -1, NULL);
+   g_free (filename);
+ }
+ gtk_widget_destroy (dialog); 
+}
+
+// choose_file aux function
+void open_file(char *filename)
+{
+}
+
+// create choose file window when load image is clicked
+void choose_file(GtkWindow *window)
+{
+  GtkWidget *dialog;
+  dialog = gtk_file_chooser_dialog_new ("Open File",
+      window,
+      GTK_FILE_CHOOSER_ACTION_OPEN,
+      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+      NULL);
+  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+  {
+    char *filename;
+    filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+    open_file (filename);
+    g_free (filename);
+  }
+  gtk_widget_destroy (dialog);
 }
 
 int main(int argc, char *argv[])
@@ -54,7 +111,7 @@ int main(int argc, char *argv[])
   gtk_table_attach_defaults(GTK_TABLE(table), button[1], 1, 2, 0, 1);
   
   button[2] = gtk_button_new_with_label("Load weight");
-  gtk_widget_set_tooltip_text(button[2], "Load your own weight for the neural network");
+  gtk_widget_set_tooltip_text(button[2], "Load your own weight for the neural  network");
   gtk_table_attach_defaults(GTK_TABLE(table), button[2], 2, 3, 0, 1);
 
   button[3] = gtk_button_new_with_label("Train");
@@ -70,7 +127,15 @@ int main(int argc, char *argv[])
   gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
   view = gtk_text_view_new();
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll), view);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), 
+      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  
+  // buttons actions
+  g_signal_connect(button[0], "clicked",  G_CALLBACK(choose_file), GTK_WINDOW(window));
+  struct data_array *data = malloc(sizeof(struct data_array));
+  data->window = window;
+  data->view = view;
+  g_signal_connect(button[1], "clicked",  G_CALLBACK(save_text), data); 
   
   // icon setup
   icon = create_pixbuf("icon.png");
