@@ -33,9 +33,9 @@ void display_segmentation(SDL_Surface *img, struct vector *V);
 
 //struct vector *blocks_detection(struct matrix *img, struct coords *init);
 
-struct vector *vertical_rec(struct matrix *img, struct coords block);
+struct vector *vertical_rec(struct matrix *img, struct coords block, int win);
 
-struct vector *horizontal_rec(struct matrix *img, struct coords block);
+struct vector *horizontal_rec(struct matrix *img, struct coords block, int win);
 
 struct vector *img_to_blocks(struct matrix *img);
 

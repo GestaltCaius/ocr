@@ -36,6 +36,115 @@ void filter_blackwhite(SDL_Surface *img) {
 
 void filter_noise(struct matrix *M)
 {
+    double *C = malloc(sizeof(double) * 9); //the convolution matrix (3x3).
+    for(int i = 0; i < 9; i++)
+        C[i] = 1;
+    C[4] = 5;
+    convolution_apply(M, C);
+    free(C);
+}
+
+void filter_contrast(struct matrix *M)
+{
+    double *C = calloc(9, sizeof(double));
+    C[1] = C[3] = C[5] = C[7] = -1, C[4] = 5;
+    convolution_apply(M, C);
+    free(C);
+}
+
+void filter_flou(struct matrix *M)
+{
+    double *C = malloc(sizeof(double) * 9);
+    for(int i = 0; i < 9; i++)
+        C[i] = 1;
+    convolution_apply(M, C);
+    free(C);
+}
+
+void filter_repoussage(struct matrix *M)
+{
+    double *C = malloc(sizeof(double) * 9);
+    C[0] = -2, C[1] = C[3] = -1, C[4] = C[5] = C[7] = 1, C[6] = C[2] = 0, C[8] = 2;
+    convolution_apply(M, C);
+    free(C);
+}
+
+void convolution_apply(struct matrix *M, double *C)
+{
+    int coef = 0; //the summ of the coefficients in the convolution matrix.
+    for(int i = 0; i < 9; i++)
+        coef += C[i];
+
+    double *Out = malloc(M->width * M->height * sizeof(double));
+    /*for(size_t i = 0; i < M->width; i++)
+    {
+        Out[i] = 255;
+        Out[M->width * M->height - 1] = 255;
+    }
+    for(size_t i = 1; i < M->height; i++)
+    {
+        Out[i * M->height] = 255;
+        Out[i * M->height + M->width -1] = 255;
+    }*/
+    for(size_t i = 0; i < M->width * M->height; i++)
+    {
+        Out[i] = 255;
+    }
+
+    //The main function :
+    for(size_t h = 1; h < M->height - 1; h++)
+    {
+        for(size_t w = 1; w < M->width - 1; w++)
+        {
+            double summ = 0;
+            int pos = 0;
+            for(int i = -1; i < 2; i++)
+            {
+                for(int j = -1; j < 2; j++)
+                {
+                    //int pos = (i + 1) * 3 + (j + 1);
+                    summ += M->data[(h + i) * M->width + (w + j)] * C[pos];
+                    pos++;
+                }
+            }
+            if(summ < 0)
+                summ = 0;
+            else
+                summ = (double)((int)(summ / coef) % 256);
+            Out[h * M->width + w] = summ;
+        }
+    }
+
+    //We whiten the borders :
+    /*
+    size_t margin = (int)M->height / 20;
+    printf("\nVertical margin : %d \n", (int)margin);
+    for(size_t i = 0; i < margin; i++)
+    {
+        for(size_t j = 0; j < M->width; j++)
+        {
+            Out[i * M->width + j] = 255;
+            Out[(M->height - i - 1) * M->width + j] = 255;
+        }
+    }
+
+    margin = (int)M->width / 20;
+    printf("\nHorizontal margin : %d \n", (int)margin);
+    for(size_t i = 0; i < M->height; i++)
+    {
+        for(size_t j = 0; j < margin; j++)
+        {
+            Out[i * M->width + j] = 255;
+            Out[i * M->width + M->width - j - 1] = 255;
+        }
+    }
+    */
+    free(M->data);
+    M->data = Out;
+}
+
+/*void filter_noise(struct matrix *M)
+{
   // Create conv matrix
   struct matrix *conv = malloc(sizeof(struct matrix));
   conv->width = conv->height = 3;
@@ -90,7 +199,7 @@ void filter_contrast(struct matrix *M)
       convolution_apply(M, i, j, conv);
     }
   }
-}
+}*/
 
 // Matrix operations
 struct matrix *filter_greyscale_matrix(SDL_Surface *img) {
@@ -127,44 +236,3 @@ void matrix_to_img(struct matrix *M, SDL_Surface *img)
     }
   }
 }
-
-struct matrix *check_neighbourhood(struct matrix *M)
-{
-    int size = M->width * M->height;
-    struct matrix *new = malloc(sizeof(struct matrix) * size);
-    new->data = malloc(sizeof(double) * size);
-    new->width = M->width;
-    new->height = M->height;
-    for(size_t h = 2; h <= M->height - 2; h++)
-    {
-        for(size_t w = 2; w < M->height - 2; w++)
-        {
-            unsigned int nb_black = 0;
-            if(M->data[h * M->width + w] == 1)
-                nb_black++;
-            if(M->data[h * M->width + w - 1] == 1)
-                nb_black++;
-            if(M->data[h * M->width + w + 1] == 1)
-                nb_black++;
-            if(M->data[h * (M->width - 1) + w] == 1)
-                nb_black++;
-            if(M->data[h * (M->width - 1) + w - 1] == 1)
-                nb_black++;
-            if(M->data[h * (M->width - 1) + w + 1] == 1)
-                nb_black++;
-            if(M->data[h * (M->width + 1) + w] == 1)
-                nb_black++;
-            if(M->data[h * (M->width + 1) + w - 1] == 1)
-                nb_black++;
-            if(M->data[h * (M->width + 1) + w + 1] == 1)
-                nb_black++;
-            if(nb_black > 0)
-               new ->data[h * M->width + w] = 1;
-            else
-                new->data[h * M->width + w] = 0;
-        }
-    }
-    free_matrix(M);
-    return new;
-}
-
