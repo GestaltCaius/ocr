@@ -355,7 +355,42 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite,
             printf("%zu:\n", i);
         double total_tryS = 0;
         for (size_t j = 0; j < nbval; j++) {
-            feedforward(net, tr[j].in);
+            
+            static double in[16*16] = {0};
+            memcpy(in, tr[j].in, 16*16*sizeof(double));
+            int nonce = rand()%5;
+            if( nonce == 0)
+            {
+                for(int y = 15; y > 0; y--)
+                {
+                    for(int x = 0; x < 16; x++)
+                        in[y*16+x] = tr[j].in[(y-1)*16 + x];
+                }   
+                for(int x = 0; x < 16; x++)
+                    in[x]=0;
+            }
+            else if(nonce == 1)
+            {
+                for(int x = 15; x > 0; x--)
+                {
+                    for(int y = 0; y < 16; y++)
+                        in[y*16+x] = tr[j].in[y*16 + x -1];
+                }   
+                for(int y = 0; y < 16; y++)
+                    in[y*16]=0;
+            }
+            else if(nonce == 2)
+            {
+                for(int y = 0; y < 15; y++)
+                {
+                    for(int x = 0; x < 16; x++)
+                        in[y*16+x] = tr[j].in[(y+1)*16 + x];
+                }   
+                for(int x = 0; x < 16; x++)
+                    in[x+15*16]=0;
+            }
+
+            feedforward(net, in);
             if (display > 0 && i % display == 0) {
                 result = get_out(*net);
 
@@ -456,9 +491,9 @@ int main(int argc, char *argv[]) {
 
     if(argv[1][0] == '5') {
         struct try* tr = init_try_folder("/home/epita/projet_ocr/ocr-bibl/training/files.txt");
-        size_t L[] = {16*16,5000,NB_CHAR};
+        size_t L[] = {16*16,2000,NB_CHAR};
         struct network net = init_network(L, 3);
-        train(&net, tr, /*todo:get this value from file*/ NB_CHAR, 20, 10);
+        train(&net, tr, /*todo:get this value from file*/ NB_CHAR, 300, 10);
         
         save_network_to_file(&net, "ocr_weights.txt");
     }
