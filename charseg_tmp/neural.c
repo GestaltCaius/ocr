@@ -184,7 +184,7 @@ double *get_out(struct network net) {
 int *get_bin_out(struct network net) {
     int *out = calloc(net.L[net.nL - 1], sizeof(double));
     for (size_t i = 0; i < net.L[net.nL - 1]; i++) {
-        if (net.n[net.nL - 1][i].lout > 0.1)
+        if (net.n[net.nL - 1][i].lout > 0.6)
             out[i] = 1;
         else
             out[i] = 0;

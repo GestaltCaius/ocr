@@ -160,11 +160,13 @@ double *resize_table(struct coords c, struct matrix *A, int x, int y) {
     for (int i = 0; i < x; i++) {
         for (int j = 0; j < y; j++) {
             if (j <= s_w && i <= s_h) {
+//                printf("%d ", (int)A->data[(c.h1 + i) * A->width + (c.w1 + j)]);
                 new_t[i * x + j] = A->data[(c.h1 + i) * A->width + (c.w1 + j)];
             } else {
                 new_t[i * x + j] = 0;
             }
         }
+  //      printf("\n");
     }
 
     return new_t;

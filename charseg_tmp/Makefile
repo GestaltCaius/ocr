@@ -1,9 +1,9 @@
 # Basic Makefile
  
 # Compilers and options
-CC=gcc #-fsanitize=address
+CC=gcc -g #-fsanitize=address
 CPPFLAGS=
-CFLAGS= -Wall -Wextra -std=c99 -O2
+CFLAGS= -Wall -Wextra -std=c99 -Og
 LDFLAGS= 
 LDLIBS= `pkg-config --libs sdl` -lSDL_image -lm
 

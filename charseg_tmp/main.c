@@ -18,12 +18,15 @@ static inline char num_to_char(int i)
     return 'a'+(i-36);
 }
 
-char array_to_char(int *array) {
+char array_to_char(double *array) {
+    int max = 0;
     for(int i = 0; i<10+26*2; i++)
-        if(array[i] >= 0.6)
-            return num_to_char(i);
+    {
+        if(array[i] > array[max])
+            max = i;
+    }
 
-    return '!';
+    return num_to_char(max);
 }
 
 struct network tr_and_init_network() {
@@ -59,7 +62,7 @@ void small_ocr(struct network *net, char *fname, struct matrix *A,
             double *in = resize_table(F->data[i], A, 16, 16);
             feedforward(net, in);
             free(in);
-            int *out = get_bin_out(*net);
+            double *out = get_out(*net);
             char res = array_to_char(out);
             free(out);
             printf("%c", res);

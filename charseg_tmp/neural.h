@@ -26,6 +26,7 @@ struct try {
 struct neuron init_neuron(size_t nw, int ent) ;
 void free_network_neurons(struct network *net) ;
 void feedforward(struct network *n, double *in) ;
+double *get_out(struct network net);
 int *get_bin_out(struct network net) ;
 
 struct try

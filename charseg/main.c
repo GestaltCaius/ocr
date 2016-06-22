@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 for(int i = 0; i <= 1; i++)
         {
             filter_noise(M);
-            M = check_neighbourhood(M);
+            //M = check_neighbourhood(M);
             matrix_to_img(M, img);
         }
         display_image(img);
