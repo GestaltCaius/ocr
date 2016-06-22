@@ -3,7 +3,7 @@
 #CC=clang -fsanitize=address
 CC=gcc -g #-fsanitize=address
 CPPFLAGS= -MMD -MP `pkg-config --cflags sdl`
-CFLAGS= -Wall -Wextra -pedantic -std=c99 -Og
+CFLAGS= -Wall -Wextra -pedantic -std=c99 -O2
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image -lm
 
