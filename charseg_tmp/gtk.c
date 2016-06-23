@@ -1,14 +1,19 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <stdio.h>
+int main_ocr(int argc, char *filename, char *file_out);
 
 // struct data for g_signal_connect
 struct data_array
 {
   GtkWindow *window;
   GtkTextBuffer *buffer;
+  GtkTextView *textView;
 };
 typedef struct data_array Data;
+
+GtkTextView* view_sale = NULL;
+GtkWindow *window_sale = NULL;
 
 // to send error if filename is wrong
 GdkPixbuf *create_pixbuf(const gchar * filename) {
@@ -31,7 +36,7 @@ void save_text(struct data_array *data)
 {
   static GtkWidget *dialog = NULL;
   if(!dialog){
-    dialog = gtk_file_chooser_dialog_new("Save file", data->window,
+    dialog = gtk_file_chooser_dialog_new("Save file", window_sale,
         GTK_FILE_CHOOSER_ACTION_SAVE,
         GTK_STOCK_SAVE,
         GTK_RESPONSE_ACCEPT,
@@ -52,17 +57,43 @@ void save_text(struct data_array *data)
 }
 
 // choose_file aux function
-void open_file(char *filename)
+void open_file(char *filename, Data *data)
 {
     main_ocr(3,filename,"out.txt");
+    FILE *fp;
+    int lSize;
+    char *buffer;
+
+    fp = fopen ( "out.txt" , "rb" );
+    if( !fp ) perror("can't find out.txt"),exit(1);
+
+    fseek( fp , 0L , SEEK_END);
+    lSize = ftell( fp );
+    rewind( fp );
+
+    buffer = calloc( 1, lSize+1 );
+    if( !buffer ) fclose(fp),fputs("memory alloc fails",stderr),exit(1);
+
+    if( 1!=fread( buffer , lSize, 1 , fp) )
+          fclose(fp),free(buffer),fputs("entire read fails",stderr),exit(1);
+
+    fclose(fp);
+
+    data->textView = view_sale;
+    data->buffer = gtk_text_view_get_buffer(data->textView);//gtk_text_buffer_new(NULL);
+        //gtk_text_view_get_buffer(data->textView);
+    gtk_text_buffer_set_text (data->buffer, buffer, -1);
+    //gtk_text_view_set_buffer (data->textView, data->buffer);
+
+    free(buffer);
 }
 
 // create choose file window when load image is clicked
-void choose_file(GtkWindow *window)
+void choose_file(Data *data)
 {
   GtkWidget *dialog;
   dialog = gtk_file_chooser_dialog_new ("Open File",
-      window,
+      window_sale,
       GTK_FILE_CHOOSER_ACTION_OPEN,
       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
       GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -71,7 +102,7 @@ void choose_file(GtkWindow *window)
   {
     char *filename;
     filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-    open_file (filename);
+    open_file (filename, data);
     g_free (filename);
   }
   gtk_widget_destroy (dialog);
@@ -130,19 +161,23 @@ int main(int argc, char *argv[])
   gtk_container_add(GTK_CONTAINER(window), vbox);
 
   // text area
-  scroll = gtk_scrolled_window_new(NULL, NULL);
-  gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
+  //SCROLL = gtk_scrolled_window_new(NULL, NULL);
+  //gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
   view = gtk_text_view_new();
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll), view);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), 
-      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  
+  //gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll), view);
+  //gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), 
+    //  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_box_pack_start (GTK_BOX (vbox), view, 1, 1, 0);
   // buttons actions
-  g_signal_connect(button[0], "clicked",  G_CALLBACK(choose_file), GTK_WINDOW(window));
-  data->buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
   data->window = GTK_WINDOW(window);
+  data->textView = GTK_TEXT_VIEW(view);
+  data->buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+  view_sale = data->textView; 
+  window_sale = data->window;
+  g_signal_connect(button[0], "clicked",  G_CALLBACK(choose_file), data);
   g_signal_connect(button[1], "clicked",  G_CALLBACK(save_text), data); 
-  
+    
+
   // icon setup
   icon = create_pixbuf("icon.png");
   gtk_window_set_icon(GTK_WINDOW(window), icon);
