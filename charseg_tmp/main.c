@@ -96,10 +96,10 @@ void small_ocr(struct network *net, char *fname, struct matrix *A,
     fclose(file);
 }
 
-int main(int argc, char *argv[]) {
+int main_ocr(int argc, char *filename, char *file_out) {
     if (argc == 2 || argc == 3) {
         init_sdl();
-        SDL_Surface *img = load_image(argv[1]);
+        SDL_Surface *img = load_image(filename);
         filter_greyscale(img);
         filter_blackwhite(img);
         display_image(img);
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
         if (argc == 3) {
             struct network* net = load_network_from_file("ocr_weights.txt");
 
-            small_ocr(net, argv[2], A, F);
+            small_ocr(net, file_out, A, F);
 
             printf("\n == END == \n");
             fflush(stdout);
