@@ -511,16 +511,16 @@ int main(int argc, char *argv[]) {
     }
 
     if(argv[1][0] == '5') {
-        struct try* tr = init_try_folder("/home/khoyo/ocr/ocr-bibl/training/files.txt");
+        struct try* tr = init_try_folder("../ocr-bibl/training/files.txt");
         size_t L[] = {16*16,2000,NB_CHAR};
         struct network net = init_network(L, 3);
-        train(&net, tr, /*todo:get this value from file*/ NB_CHAR, 150, 10);
+        train(&net, tr, /*todo:get this value from file*/ NB_POL*NB_CHAR, 150, 10);
         
         save_network_to_file(&net, "ocr_weights.txt");
     }
 
     if(argv[1][0] == '6') {
-        struct try* tr = init_try_folder("/home/epita/projet_ocr/ocr-bibl/training/files.txt");
+        struct try* tr = init_try_folder("/home/khoudl_y/ocr/ocr-bibl/training/files.txt");
     }
     printf("error args");
     printf("end");
