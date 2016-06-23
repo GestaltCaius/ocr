@@ -168,7 +168,7 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
             if(w1 != w2)
             {
                 struct coords ch;
-                ch.w1 = w1, ch.w2 = w2, ch.h1 = h1, ch.h2 = h2;
+                ch.w1 = w1 - 1, ch.w2 = w2 + 1, ch.h1 = h1 - 1, ch.h2 = h2 + 1;
                 vector_push_back(output, ch);
             }            
         }
