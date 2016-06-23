@@ -161,13 +161,14 @@ int main(int argc, char *argv[])
   gtk_container_add(GTK_CONTAINER(window), vbox);
 
   // text area
-  //SCROLL = gtk_scrolled_window_new(NULL, NULL);
-  //gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
+  scroll = gtk_scrolled_window_new(NULL, NULL);
+  gtk_box_pack_start(GTK_BOX(vbox), scroll, TRUE, TRUE, 0);
   view = gtk_text_view_new();
-  //gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll), view);
-  //gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), 
-    //  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scroll), view);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll), 
+      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_box_pack_start (GTK_BOX (vbox), view, 1, 1, 0);
+  
   // buttons actions
   data->window = GTK_WINDOW(window);
   data->textView = GTK_TEXT_VIEW(view);
