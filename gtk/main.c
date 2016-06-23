@@ -4,7 +4,8 @@
 // struct data for g_signal_connect
 struct data_array
 {
-  GtkWidget *window, *view;
+  GtkWidget *window;
+  GtkTextBuffer *buffer;
 };
 
 // to send error if filename is wrong
@@ -24,28 +25,45 @@ GdkPixbuf *create_pixbuf(const gchar * filename) {
 }
 
 // save buffer to text file
-void save_text(GtkWindow *window, GtkWidget *view)
+void save_text(struct data_array *data)
 {
- GtkWidget *dialog;
+/* GtkWidget *dialog;
  dialog = gtk_file_chooser_dialog_new ("Save File",
-     window,
+     data->window,
      GTK_FILE_CHOOSER_ACTION_SAVE,
      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
      NULL);
- gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
- gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "~/Documents/");
- gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), "result.txt");
  if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
  {
    gchar *filename, *text;
-   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW(view));
-   g_object_get(G_OBJECT(buffer), "text", &text, NULL);
+   g_object_get(G_OBJECT(data->buffer), "text", &text, NULL);
    filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
    g_file_set_contents (filename, text, -1, NULL);
    g_free (filename);
  }
- gtk_widget_destroy (dialog); 
+ gtk_widget_destroy (dialog); */
+    
+  static GtkWidget *dialog = NULL;
+  if(!dialog){
+    dialog = gtk_file_chooser_dialog_new("Save file", GTK_WINDOW(data->window),
+        GTK_FILE_CHOOSER_ACTION_SAVE,
+        GTK_STOCK_SAVE,
+        GTK_RESPONSE_ACCEPT,
+        GTK_STOCK_CANCEL,
+        GTK_RESPONSE_REJECT,
+        NULL);
+  }
+  if(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT){
+    gchar *filename;
+    gchar *text;
+    g_object_get(G_OBJECT(data->buffer), "text", &text, NULL);
+    filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+    g_file_set_contents(filename, text, -1, NULL);
+    g_free(filename);
+    g_free(text);
+  }
+  gtk_widget_hide(dialog);
 }
 
 // choose_file aux function
@@ -134,7 +152,7 @@ int main(int argc, char *argv[])
   g_signal_connect(button[0], "clicked",  G_CALLBACK(choose_file), GTK_WINDOW(window));
   struct data_array *data = malloc(sizeof(struct data_array));
   data->window = window;
-  data->view = view;
+  data->buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
   g_signal_connect(button[1], "clicked",  G_CALLBACK(save_text), data); 
   
   // icon setup
