@@ -59,8 +59,16 @@ void small_ocr(struct network *net, char *fname, struct matrix *A,
     printf(" == BEGIN OCR == \n");
     for (size_t i = 0; i < F->size; i++) {
         if (F->data[i].w1 < 0) {
-            printf("\n");
-            fprintf(file, "\n");
+            if(F->data[i].w1 == -42)
+            {
+                printf(" ");
+                fprintf(file, " ");
+            }
+            else
+            {
+                printf("\n");
+                fprintf(file, "\n");
+            }
         } else {
             double *in = resize_table(F->data[i], A, 16, 16);
             /*
