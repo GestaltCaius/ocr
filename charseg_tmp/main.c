@@ -26,7 +26,10 @@ char array_to_char(double *array) {
             max = i;
     }
 
-    return num_to_char(max);
+    if(max>0.6)
+        return num_to_char(max);
+    else
+        return '!';
 }
 
 struct network tr_and_init_network() {
@@ -60,6 +63,18 @@ void small_ocr(struct network *net, char *fname, struct matrix *A,
             fprintf(file, "\n");
         } else {
             double *in = resize_table(F->data[i], A, 16, 16);
+            /*
+                printf("\n");
+            for(int i = 0; i< 16; i++)
+            {
+                for(int j = 0; j < 16; j++)
+                {
+                    printf("%d", (int)in[i*16+j]);
+                }
+                printf("\n");
+            } 
+                printf("\n");
+                */
             feedforward(net, in);
             free(in);
             double *out = get_out(*net);

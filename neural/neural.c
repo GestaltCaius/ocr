@@ -389,15 +389,36 @@ void train(struct network *net, struct try *tr, size_t nbval, size_t nite,
                 for(int x = 0; x < 16; x++)
                     in[x+15*16]=0;
             }
+            else if(nonce == 3)
+            {
+                for(int x = 0; x < 15; x++)
+                {
+                    for(int y = 0; y < 16; y++)
+                        in[y*16+x] = tr[j].in[y*16 + x+1];
+                }   
+                for(int y = 0; y < 16; y++)
+                    in[y*16+15]=0;
+            }
 
             feedforward(net, in);
             if (display > 0 && i % display == 0) {
                 result = get_out(*net);
 
-                printf("\n\tIN:\n\t|");
+                if(nonce != 4)
+                    printf("DECALAGE! %d\n", nonce);
+
+                printf("\n\tIN:\n\t");
                 fflush(stdout);
                 for (size_t k = 0; k < (*net).L[0]; k++)
-                    printf(" %d |", (int)tr[j].in[k]);
+                {
+                    if(k%16 == 0)
+                        printf("\n\t|");
+                    //printf(" %d |", (int)tr[j].in[k]);
+                    if((int)in[k])
+                        printf("X");
+                    else
+                        printf(" ");
+                }
 
                 printf("\n\tOUT:\n\t|");
                 for (size_t k = 0; k < (*net).L[(*net).nL - 1]; k++)
@@ -490,10 +511,10 @@ int main(int argc, char *argv[]) {
     }
 
     if(argv[1][0] == '5') {
-        struct try* tr = init_try_folder("/home/epita/projet_ocr/ocr-bibl/training/files.txt");
+        struct try* tr = init_try_folder("/home/khoyo/ocr/ocr-bibl/training/files.txt");
         size_t L[] = {16*16,2000,NB_CHAR};
         struct network net = init_network(L, 3);
-        train(&net, tr, /*todo:get this value from file*/ NB_CHAR, 300, 10);
+        train(&net, tr, /*todo:get this value from file*/ NB_CHAR, 150, 10);
         
         save_network_to_file(&net, "ocr_weights.txt");
     }
