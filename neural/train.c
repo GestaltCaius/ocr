@@ -31,13 +31,16 @@ struct try
 
         size_t nb_line = atoi(path_tmp) -1 ;
         printf("%zu", nb_line);
-        size_t nb_char = NB_CHAR;
+        size_t nb_char = (26*2+10);
         struct try
             *trys = calloc(nb_line * nb_char, sizeof(struct try));
         init_sdl();
         for(size_t i = 0; i < nb_line; i++)
         {
             read = getline(&path_tmp,&n,fp);
+            printf("%s", path_tmp);
+            char tmp[50];
+            scanf("%s", tmp);
             if(read)
             {
                 path_tmp[read-1] = '\0';
