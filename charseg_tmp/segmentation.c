@@ -98,7 +98,7 @@ struct vector *img_to_lines(struct matrix *img) {
     return lines;
 }
 
-struct vector *lines_to_char(struct matrix *img, struct vector *lines) {
+/*struct vector *lines_to_char(struct matrix *img, struct vector *lines) {
     struct vector *imgs = vector_make((img->height) * (img->width));
     for (size_t k = 0; k < lines->size; k++) {
         struct coords actual_coords;
@@ -130,6 +130,51 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines) {
         vector_push_back(imgs, actual_coords);
     }
     return imgs;
+}*/
+
+struct vector *lines_to_char(struct matrix *img, struct vector *lines)
+{
+    struct vector *output = vector_make(img->height * img->width);
+    for(; lines->size != 0;)
+    {
+        struct coords current_line;
+        vector_pop_front(lines, &current_line);
+        int w = 0;
+        int passed = 0; //first char met ?
+        int size = 0;
+        int sized = 0;  //size of a char known ?
+        int h1 = current_line.h1, h2 = current_line.h2;
+        for(; w < img->width; w++)
+        {
+            int length = 0;
+            int w1, w2;
+            for(; w < img->width && column_is_empty(img, w, h1, h2); w++){
+                length++;
+            }
+            w1 = w;
+            for(; w < img->width && !column_is_empty(img, w, h1, h2); w++){
+                if(!sized)
+                    size++;
+            }
+            if(passed && length > size / 2)
+            {
+                struct coords space;
+                space.w1 = space.w2 = space.h1 = space.h2 = -42;
+                vector_push_back(output, space);
+            }
+            passed = 1;
+            sized = 1;
+            w2 = w;
+            if(w1 != w2)
+            {
+                struct coords ch;
+                ch.w1 = w1, ch.w2 = w2, ch.h1 = h1, ch.h2 = h2;
+                vector_push_back(output, ch);
+            }            
+        }
+    }
+    //free_vector(lines);
+    return output;
 }
 
 struct vector *resize_char(struct matrix *img, struct vector *chars) {
