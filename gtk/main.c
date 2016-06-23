@@ -1,12 +1,14 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 // struct data for g_signal_connect
 struct data_array
 {
-  GtkWidget *window;
+  GtkWindow *window;
   GtkTextBuffer *buffer;
 };
+typedef struct data_array Data;
 
 // to send error if filename is wrong
 GdkPixbuf *create_pixbuf(const gchar * filename) {
@@ -27,26 +29,9 @@ GdkPixbuf *create_pixbuf(const gchar * filename) {
 // save buffer to text file
 void save_text(struct data_array *data)
 {
-/* GtkWidget *dialog;
- dialog = gtk_file_chooser_dialog_new ("Save File",
-     data->window,
-     GTK_FILE_CHOOSER_ACTION_SAVE,
-     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-     GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
-     NULL);
- if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
- {
-   gchar *filename, *text;
-   g_object_get(G_OBJECT(data->buffer), "text", &text, NULL);
-   filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-   g_file_set_contents (filename, text, -1, NULL);
-   g_free (filename);
- }
- gtk_widget_destroy (dialog); */
-    
   static GtkWidget *dialog = NULL;
   if(!dialog){
-    dialog = gtk_file_chooser_dialog_new("Save file", GTK_WINDOW(data->window),
+    dialog = gtk_file_chooser_dialog_new("Save file", data->window,
         GTK_FILE_CHOOSER_ACTION_SAVE,
         GTK_STOCK_SAVE,
         GTK_RESPONSE_ACCEPT,
@@ -90,22 +75,25 @@ void choose_file(GtkWindow *window)
   }
   gtk_widget_destroy (dialog);
 }
+    
 
 int main(int argc, char *argv[])
 {
   // var declarations
-  GtkWidget *window;
+  GtkWidget *window = NULL;
 
   GtkWidget *button[4];
-  GtkWidget *table;
+  GtkWidget *table = NULL;
 
-  GtkWidget *vbox; // to align text area with buttons
-  GtkWidget *view;
-  GtkWidget *scroll;
+  GtkWidget *vbox = NULL; // to align text area with buttons
+  GtkWidget *view = NULL;
+  GtkWidget *scroll = NULL;
 
-  GdkPixbuf *icon;
+  GdkPixbuf *icon = NULL;
+  Data *data;
 
   gtk_init(&argc, &argv);
+  data = g_slice_new(Data);
 
   // main window setup
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -150,9 +138,8 @@ int main(int argc, char *argv[])
   
   // buttons actions
   g_signal_connect(button[0], "clicked",  G_CALLBACK(choose_file), GTK_WINDOW(window));
-  struct data_array *data = malloc(sizeof(struct data_array));
-  data->window = window;
   data->buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+  data->window = GTK_WINDOW(window);
   g_signal_connect(button[1], "clicked",  G_CALLBACK(save_text), data); 
   
   // icon setup
@@ -166,6 +153,9 @@ int main(int argc, char *argv[])
 
   g_object_unref(icon); // to free the icon when the count drops to 0
 
-  gtk_main(); 
+
+  gtk_main();
+  g_slice_free(Data, data);
+
   return 0;
 }
