@@ -172,6 +172,9 @@ struct vector *lines_to_char(struct matrix *img, struct vector *lines)
                 vector_push_back(output, ch);
             }            
         }
+        struct coords newline;
+        newline.w1 = newline.w2 = newline.h1 = newline.h2 = -1;
+        vector_push_back(output, newline);
     }
     //free_vector(lines);
     return output;
